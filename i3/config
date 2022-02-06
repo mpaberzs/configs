@@ -57,7 +57,7 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-# bindsym $mod+l focus up
+bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
@@ -182,7 +182,7 @@ bar {
 }
 
 # my additions
-bindsym $mod+l exec --no-startup-id i3lock --image ~/Downloads/leopard-3440-2560.png
+bindsym $mod+Mod1+Shift+l exec --no-startup-id i3lock --image ~/Downloads/leopard-3440-2560.png
 
 workspace $ws1 output "web"
 workspace $ws2 output "code"
