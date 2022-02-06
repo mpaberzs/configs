@@ -4,3 +4,7 @@ shell:
     - -l
     - -c
     - "tmux"
+
+# Background opacit
+window:
+  opacity: 0.9
