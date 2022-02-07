@@ -18,7 +18,7 @@ main = do
   xmonad $ desktopConfig
     { terminal    = "alacritty"
     , modMask     = mod4Mask
-    , borderWidth = 3
+    , borderWidth = 2
     , startupHook = startup
     }
     `additionalKeys` myKeys
@@ -33,11 +33,12 @@ myKeys = [
      , ((0, xF86XK_AudioLowerVolume),  spawn "amixer -D pulse sset Master 10%-")
      , ((0, xF86XK_AudioMute),         spawn "amixer -D pulse sset Master toggle")
      , ((0, xF86XK_AudioMicMute),         spawn "amixer -D pulse sset Capture toggle")
-     , ((0, xF86XK_AudioPrev),         spawn "playerctl prev")
+     , ((0, xF86XK_AudioPrev),         spawn "playerctl previous")
      , ((0, xF86XK_AudioNext),         spawn "playerctl next")
      , ((0, xF86XK_AudioStop),         spawn "playerctl stop")
      , ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +10%")
      , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
-     , ((mod4Mask, xK_F12), spawn "i3lock")
+     , ((mod4Mask, xK_F12), spawn "i3lock --image ~/Downloads/leopard-3440-2560.png")
      , ((mod4Mask, xK_p), spawn "dmenu_run -fn 'Inconsolata 12'")
+     , ((mod4Mask, xK_Print), spawn "spectacle -rc")
     ]
