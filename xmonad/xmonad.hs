@@ -6,6 +6,8 @@ import XMonad.Util.EZConfig
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import Graphics.X11.ExtraTypes.XF86
+import XMonad.Prompt
+import XMonad.Prompt.Shell
 
 startup = do
     setWMName "LG3D"
@@ -41,4 +43,5 @@ myKeys = [
      , ((mod4Mask, xK_F12), spawn "i3lock --image ~/Downloads/leopard-3440-2560.png")
      , ((mod4Mask, xK_p), spawn "dmenu_run -fn 'Inconsolata 12'")
      , ((mod4Mask, xK_Print), spawn "spectacle -rc")
+     , ((mod4Mask, xK_r), shellPrompt def)
     ]
