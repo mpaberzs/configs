@@ -1,4 +1,4 @@
 ~/.xmonad/xmonad.hs
 
 deps:
-sudo pacman -S xmonad xmonad-contrib xmonad-utils
+sudo pacman -S xmonad xmonad-contrib xmonad-utils stalonetray nitrogen picom xmobar

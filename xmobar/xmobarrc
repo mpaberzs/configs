@@ -1,0 +1,20 @@
+Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Top
+       , lowerOnStart = True
+       , commands = [ 
+                    -- Run Network "wlp0s20f3" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    Run Wireless "wlp0s20f3" [ "-t", "<essid>" ] 10
+                    , Run Network "tun0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+    		    , Run Date "%a %b %_d %Y %H:%M" "date" 10
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       -- , template = "%cpu% | %memory% * %swap% | %wlp0s20f3wi% - %tun0% <fc=#ee9a00>%date%</fc>"
+       , template = "}{ %wlp0s20f3wi% - %tun0% <fc=#ee9a00>%date%</fc>"
+       }
