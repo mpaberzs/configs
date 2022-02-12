@@ -1,4 +1,5 @@
 Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:Font Awesome 5 Free Solid:pixelsize=12" ]
        , bgColor = "black"
        , fgColor = "grey"
        , position = Top
@@ -24,6 +25,5 @@ Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       -- , template = "%cpu% | %memory% * %swap% | %wlp0s20f3wi% - %tun0% <fc=#ee9a00>%date%</fc>"
-       , template = "}{ %wlp0s20f3wi% - %tun0% | %battery% <fc=#ee9a00>%date%</fc>"
+       , template = "}{ %wlp0s20f3wi% - %tun0% | %battery% | <fc=#ee9a00>%date%</fc><fc=#000000>paddingpadd</fc>"
        }

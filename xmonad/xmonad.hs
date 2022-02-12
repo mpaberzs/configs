@@ -15,7 +15,7 @@ startup = do
     -- spawn "tint2 &"
     spawn "nitrogen --restore &"
     spawn "xmobar /home/martins/.config/xmobar/xmobarrc"
-    spawnOnce "stalonetray -bg '#000000' -i 14"
+    spawnOnce "stalonetray -bg '#000000' -i 14 --geometry=3x1-0+0"
 
 main = do
 --  xmproc <- spawnPipe "xmobar /home/dt/.config/xmobar/xmobarrc"
