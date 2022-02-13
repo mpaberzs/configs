@@ -14,7 +14,7 @@ startup = do
     spawnOnce "picom &"
     -- spawn "tint2 &"
     spawn "nitrogen --restore &"
-    spawn "xmobar /home/martins/.config/xmobar/xmobarrc"
+    spawn "xmobar ~/.config/xmobar/xmobarrc"
     spawnOnce "stalonetray -bg '#000000' -i 14"
 
 main = do
