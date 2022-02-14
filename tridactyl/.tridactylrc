@@ -161,5 +161,6 @@ bind <AS-ArrowUp><AS-ArrowUp><AS-ArrowDown><AS-ArrowDown><AS-ArrowLeft><AS-Arrow
 blacklistadd https://mail.google.com/mail/u/0/#inbox
 blacklistadd https://parsiq.atlassian.net/*
 blacklistadd https://gitlab.com/*
+blacklistadd https://www.youtube.com/*
 " For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
 " vim: set filetype=tridactyl
