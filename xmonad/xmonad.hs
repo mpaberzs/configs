@@ -8,22 +8,23 @@ import XMonad.Util.Run
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Prompt
 import XMonad.Prompt.Shell
+import XMonad.Layout.NoBorders
 
 startup = do
     setWMName "LG3D"
     spawnOnce "picom &"
-    -- spawn "tint2 &"
     spawn "nitrogen --restore &"
-    spawn "xmobar ~/.config/xmobar/xmobarrc"
+    -- spawn "xmobar ~/.config/xmobar/xmobarrc"
     spawnOnce "stalonetray -bg '#000000' -i 14 --geometry=3x1-0+0"
 
 main = do
---  xmproc <- spawnPipe "xmobar /home/dt/.config/xmobar/xmobarrc"
+  xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
   xmonad $ desktopConfig
     { terminal    = "alacritty"
     , modMask     = mod4Mask
     , borderWidth = 2
     , startupHook = startup
+    , layoutHook  = layout
     }
     `additionalKeys` myKeys
   xmonad $ docks def
@@ -52,7 +53,7 @@ myKeys = [
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
     ]
 
-layout = tiled ||| Mirror tiled ||| Full
+layout = avoidStruts(tiled ||| Mirror tiled ||| noBorders Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
