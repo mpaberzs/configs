@@ -2,7 +2,7 @@ Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Font Awesome 5 Free Solid:pixelsize=12" ]
        , bgColor = "black"
        , fgColor = "grey"
-       , position = Top
+       , position = TopP 0 80
        , lowerOnStart = True
        , commands = [
                     -- Run Network "wlp0s20f3" ["-L","0","-H","32","--normal","green","--high","red"] 10
@@ -25,5 +25,5 @@ Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "}{ %wlp0s20f3wi% - %tun0% | %battery% | <fc=#ee9a00>%date%</fc><fc=#000000>paddingpadd</fc>"
+       , template = "}{ %wlp0s20f3wi% - %tun0%<hspace=20/>%battery%<hspace=20/><fc=#ee9a00>%date%</fc>"
        }

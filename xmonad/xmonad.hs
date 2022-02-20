@@ -14,8 +14,8 @@ startup = do
     setWMName "LG3D"
     spawnOnce "picom &"
     spawn "nitrogen --restore &"
-    -- spawn "xmobar ~/.config/xmobar/xmobarrc"
-    spawnOnce "stalonetray -bg '#000000' -i 14 --geometry=3x1-0+0"
+    spawnOnce "nm-applet --indicator &"
+    spawnOnce "trayer --widthtype pixel --width 80 --align right --edge top --height 18 --tint 0x00000000 --transparent true --alpha 0"
 
 main = do
   xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
@@ -48,7 +48,6 @@ myKeys = [
      , ((mod4Mask, xK_r), spawn "dmenu_run -fn 'Inconsolata 12'")
      , ((mod4Mask, xK_p), spawn "autorandr --change")
      , ((mod4Mask, xK_n), spawn "xterm -e 'nmtui-connect'")
-     -- , ((mod4Mask, xK_n), spawn "networkmanager_dmenu -fn 'Inconsolata 12'")
      , ((mod4Mask, xK_Print), spawn "spectacle -rc")
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
     ]
@@ -62,7 +61,7 @@ layout = avoidStruts(tiled ||| Mirror tiled ||| noBorders Full)
      nmaster = 1
      
      -- Default proportion of screen occupied by master pane
-     ratio   = 3/4
+     ratio   = 1/2
      
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
