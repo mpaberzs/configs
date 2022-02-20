@@ -1,18 +1,7 @@
 shell:
   program: /bin/zsh
-#  args:
-#    - -l
-#    - -c
-#    - "tmux"
-
-# Background opacit
-window:
-  opacity: 0.9
-
-background_opacity: 0.9
 
 scrolling:
   # maximum number of lines in the scrollback buffer. Specifying '0' will
   #   # disable scrolling.
   history: 99999
-  #
