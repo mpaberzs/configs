@@ -23,7 +23,8 @@ startup = do
     spawnOnce "trayer --widthtype pixel --width 80 --align right --edge top --height 22 --tint 0x00000000 --transparent true --alpha 1"
 
 main = do
-  xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
+  xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc1"
+  xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc2"
   xmonad $ desktopConfig
     { terminal    = "alacritty"
     , modMask     = mod4Mask
