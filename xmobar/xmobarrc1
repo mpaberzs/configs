@@ -7,10 +7,11 @@ Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
                            ]
        , bgColor = "black"
        , fgColor = "grey"
-       , position = TopP 0 80
+       , position = Static { xpos = 1080, ypos = 0, width = 2480, height = 24 }
        , lowerOnStart = True
        , commands = [
-           Run Network "tun0" ["-L","0","-H","32","-x","OFF","--normal","green","--high","red"] 10
+           Run Network "tunprod" ["-L","0","-H","32","-x","OFF","--normal","green","--high","red", "-t", "<up>"] 10
+           , Run Network "tunstag" ["-L","0","-H","32","-x","OFF","--normal","green","--high","red", "-t", "<up>"] 10
            , Run Volume "default" "Master" ["-t", "<status><hspace=5/><volume>", "--", "-o", "<fn=1></fn>", "-O", "<fn=1></fn>", "-C", "#ee9a00", "-c", "#ee9a00"] 10
            , Run Wireless "wlp0s20f3" ["-t", "<essid>"] 10
     		   , Run Date "<fc=#009484><fn=1> </fn><hspace=5/>%a %b %_d<hspace=10/><fn=1> </fn><hspace=5/>%H:%M</fc>" "date" 10
@@ -26,5 +27,5 @@ Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
        ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "}{ <fn=1></fn><hspace=5/>%wlp0s20f3wi%<hspace=10/><fn=1> </fn>%tun0%<hspace=20/><fc=#ee9a00>%default:Master%<hspace=10/>%battery%</fc><hspace=20/>%date%"
+       , template = "}{ <fn=1></fn><hspace=5/>%wlp0s20f3wi%<hspace=10/><fn=1> </fn>%tunstag% / %tunprod%<hspace=20/><fc=#ee9a00>%default:Master%<hspace=10/>%battery%</fc><hspace=20/>%date%"
        }
