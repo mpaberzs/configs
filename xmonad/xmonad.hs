@@ -15,18 +15,19 @@ import System.IO (hPutStrLn)
 import qualified XMonad.StackSet as W
 import XMonad.Hooks.FadeInactive
 import XMonad.Layout.Spacing
-
+import System.Environment (getEnv, lookupEnv)
+import MyXmonadConfig (getConfigValue, extraKeys)
 
 startup = do
     -- mainly for WebStorm
     setWMName "LG3D"
-    -- attempt to smooth with fade, not working, vsync doesn't work too methinks
-    spawnOnce "picom --daemon --vsync --fade-in-step 0.01 --fade-out-step 0.03"
-    spawn     "nitrogen --set-tiled /home/martins/Pictures/wallpaper.jpg &"
+    -- vsync doesn't work too methinks
+    spawnOnce "picom --daemon --vsync"
+    spawn     $ "nitrogen --set-tiled " ++ (getConfigValue "wallpaper") ++ " &"
     spawnOnce "nm-applet --indicator &"
     spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align right --edge top --height 22 --tint 0x00000000 --transparent true --alpha 1 &"
     -- could edit i3lock (or use slock) compile manually making it 'dunstctl set-paused toggle &'
-    spawnOnce "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i /home/martins/Pictures/wallpaper.png &"
+    spawnOnce $ "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i " ++ (getConfigValue "screen-lock-wallpaper") ++ " &"
     spawn     "xset s 600"
     spawnOnce "autorandr --change"
 
@@ -36,10 +37,10 @@ myFadeInactiveLogHook = fadeInactiveLogHook fadeAmount
 
 main = do
   -- when in work with primary horizontal and left of it vertical secondary
-  xmproc <- spawnPipe "xmobar -x 0 /home/martins/.config/xmobar/xmobarrc1"
-  xmproc <- spawnPipe "xmobar -x 1 /home/martins/.config/xmobar/xmobarrc2"
+  -- xmproc <- spawnPipe "xmobar -x 0 " ++ (getConfigValue "home") ++ "/.config/xmobar/xmobarrc1"
+  -- xmproc <- spawnPipe "xmobar -x 1 " ++ (getConfigValue "home") ++ "/.config/xmobar/xmobarrc2"
   -- when only laptop screen
-  -- xmproc <- spawnPipe "xmobar -x 0 /home/martins/.config/xmobar/xmobarrc_mobile"
+  xmproc <- spawnPipe $ "xmobar -x 0 " ++ (getConfigValue "xmobarrc")
   xmonad $ desktopConfig
     { terminal    = "alacritty"
     , modMask     = mod4Mask
@@ -71,21 +72,18 @@ myKeys = [
      , ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +5%")
      , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 5%-")
      , ((mod4Mask, xK_F12), spawn "xset s activate")
-     , ((mod4Mask .|. shiftMask, xK_F12), spawn "/home/martins/.scripts/suspend-menu/suspend-menu.sh")
-     -- , ((mod4Mask, xK_F10), prompt "nmcli c u martins_parsiq_staging" greenXPConfig)
-     -- , ((mod4Mask .|. shiftMask, xK_F10), prompt "nmcli c d martins_parsiq_staging" greenXPConfig)
-     -- , ((mod4Mask, xK_F11), prompt "nmcli c u martins_parsiq_prod" greenXPConfig)
-     -- , ((mod4Mask .|. shiftMask, xK_F11), prompt "nmcli c d martins_parsiq_prod" greenXPConfig)
-     , ((mod4Mask, xK_d), spawn "/home/martins/.scripts/menu/menu.sh")
+     , ((mod4Mask .|. shiftMask, xK_F12), spawn $ (getConfigValue "home") ++ "/.scripts/suspend-menu/suspend-menu.sh")
+     , ((mod4Mask, xK_d), spawn $ (getConfigValue "home") ++ "/.scripts/menu/menu.sh")
      , ((mod4Mask .|. shiftMask, xK_d), spawn "dmenu_run -m 0 -fn 'Roboto 11'")
      , ((mod4Mask, xK_p), spawn "autorandr --change")
-     -- , ((mod4Mask, xK_n), spawn "xterm -e 'nmtui-connect'")
      , ((mod4Mask, xK_Print), spawn "flameshot")
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
      , ((mod4Mask .|. shiftMask, xK_m), sendMessage $ JumpToLayout "Full")
      , ((mod4Mask .|. shiftMask, xK_n), spawn "notify-send -t 1000 'Notification state change' `dunstctl is-paused` && sleep 1.5 && dunstctl set-paused toggle")
      , ((mod4Mask .|. shiftMask, xK_h), spawn "dunstctl history-pop")
     ] ++
+
+    extraKeys ++
 
     [((m .|. mod4Mask, k), windows $ f i)
          | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
