@@ -1,9 +1,14 @@
+# working_directory: /home/martins/projects
+
 shell:
   program: /bin/zsh
 
 scrolling:
   # maximum number of lines in the scrollback buffer. Specifying '0' will disable scrolling.
   history: 99999
+
+font:
+  size: 16
 
 # TODO: read more about this
 bell:
