@@ -6,7 +6,8 @@ config = [
     ("home", "/home/user")
   , ("wallpaper", "")
   , ("screen-lock-wallpaper", "")
-  , ("xmobarrc", "/home/user/.config/xmobar/xmobarrc")
+  , ("xmobarrc1", "/home/user/.config/xmobar/xmobarrc1")
+  , ("xmobarrc2", "/home/user/.config/xmobar/xmobarrc2")
   ]
 
 extraKeys = []
