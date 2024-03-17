@@ -1,0 +1,267 @@
+diff --git a/init.lua b/init.lua
+index 21f0b6f..9a91641 100644
+--- a/init.lua
++++ b/init.lua
+@@ -19,3 +19,25 @@ end
+ dofile(vim.g.base46_cache .. "defaults")
+ vim.opt.rtp:prepend(lazypath)
+ require "plugins"
++
++-- don't send buffer to clipboard by default
++vim.opt.clipboard = ''
++
++if vim.g.neovide then
++  -- don't show drunken cursor animation
++  vim.g.neovide_cursor_animation_length = 0.0
++  vim.g.neovide_cursor_animate_in_insert_mode = false
++  vim.g.neovide_scroll_animation_length = 0.0
++end
++
++-- relative line num by default
++vim.wo.relativenumber = true
++-- sometimes need bigger font
++-- vim.o.guifont = "Nerd Font:h18"
++-- sometimes smaller
++-- vim.o.guifont = "Nerd Font:h16"
++vim.opt.ignorecase = false
++vim.opt.smartcase = false
++
++-- TODO: make keybinding
++-- virtualedit=all/none
+diff --git a/lua/core/init.lua b/lua/core/init.lua
+index 19804e1..37e2fe0 100644
+--- a/lua/core/init.lua
++++ b/lua/core/init.lua
+@@ -39,7 +39,7 @@ opt.signcolumn = "yes"
+ opt.splitbelow = true
+ opt.splitright = true
+ opt.termguicolors = true
+-opt.timeoutlen = 400
++opt.timeoutlen = 1000
+ opt.undofile = true
+ 
+ -- interval for writing swap file to disk, also used by gitsigns
+diff --git a/lua/core/mappings.lua b/lua/core/mappings.lua
+index 0a652a7..ca8279c 100644
+--- a/lua/core/mappings.lua
++++ b/lua/core/mappings.lua
+@@ -9,10 +9,11 @@ M.general = {
+     ["<C-e>"] = { "<End>", "End of line" },
+ 
+     -- navigate within insert mode
+-    ["<C-h>"] = { "<Left>", "Move left" },
+-    ["<C-l>"] = { "<Right>", "Move right" },
+-    ["<C-j>"] = { "<Down>", "Move down" },
+-    ["<C-k>"] = { "<Up>", "Move up" },
++    -- TODO: proper
++    -- ["<C-h>"] = { "<Left>", "Move left" },
++    -- ["<C-l>"] = { "<Right>", "Move right" },
++    -- ["<C-j>"] = { "<Down>", "Move down" },
++    -- ["<C-k>"] = { "<Up>", "Move up" },
+   },
+ 
+   n = {
+@@ -46,6 +47,9 @@ M.general = {
+     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
+     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
+ 
++    ["<leader>va"] = { "<cmd> set virtualedit=all <CR>" },
++    ["<leader>vn"] = { "<cmd> set virtualedit=none <CR>" },
++
+     ["<leader>fm"] = {
+       function()
+         vim.lsp.buf.format { async = true }
+@@ -165,12 +169,12 @@ M.lspconfig = {
+       "LSP signature help",
+     },
+ 
+-    ["<leader>D"] = {
+-      function()
+-        vim.lsp.buf.type_definition()
+-      end,
+-      "LSP definition type",
+-    },
++    -- ["<leader>D"] = {
++    --   function()
++    --     vim.lsp.buf.type_definition()
++    --   end,
++    --   "LSP definition type",
++    -- },
+ 
+     ["<leader>ra"] = {
+       function()
+@@ -193,7 +197,7 @@ M.lspconfig = {
+       "LSP references",
+     },
+ 
+-    ["<leader>lf"] = {
++    ["<leader>D"] = {
+       function()
+         vim.diagnostic.open_float { border = "rounded" }
+       end,
+@@ -244,12 +248,13 @@ M.lspconfig = {
+   },
+ 
+   v = {
+-    ["<leader>ca"] = {
+-      function()
+-        vim.lsp.buf.code_action()
+-      end,
+-      "LSP code action",
+-    },
++    -- TODO: whats this?
++    -- ["<leader>ca"] = {
++    --   function()
++    --     vim.lsp.buf.code_action()
++    --   end,
++    --   "LSP code action",
++    -- },
+   },
+ }
+ 
+@@ -258,10 +263,11 @@ M.nvimtree = {
+ 
+   n = {
+     -- toggle
+-    ["<C-n>"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
++    -- TODO: proper
++    ["<leader>en"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
+ 
+     -- focus
+-    ["<leader>e"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
++    ["<leader>ee"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
+   },
+ }
+ 
+@@ -279,14 +285,14 @@ M.telescope = {
+     ["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
+ 
+     -- git
+-    ["<leader>cm"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
++    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
+     ["<leader>gt"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+ 
+     -- pick a hidden term
+     ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
+ 
+     -- theme switcher
+-    ["<leader>th"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
++    ["<leader>tt"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
+ 
+     ["<leader>ma"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+   },
+@@ -297,60 +303,60 @@ M.nvterm = {
+ 
+   t = {
+     -- toggle in terminal mode
+-    ["<A-i>"] = {
+-      function()
+-        require("nvterm.terminal").toggle "float"
+-      end,
+-      "Toggle floating term",
+-    },
+-
+-    ["<A-h>"] = {
+-      function()
+-        require("nvterm.terminal").toggle "horizontal"
+-      end,
+-      "Toggle horizontal term",
+-    },
+-
+-    ["<A-v>"] = {
+-      function()
+-        require("nvterm.terminal").toggle "vertical"
+-      end,
+-      "Toggle vertical term",
+-    },
++    -- ["<A-i>"] = {
++    --   function()
++    --     require("nvterm.terminal").toggle "float"
++    --   end,
++    --   "Toggle floating term",
++    -- },
++    --
++    -- ["<A-h>"] = {
++    --   function()
++    --     require("nvterm.terminal").toggle "horizontal"
++    --   end,
++    --   "Toggle horizontal term",
++    -- },
++    --
++    -- ["<A-v>"] = {
++    --   function()
++    --     require("nvterm.terminal").toggle "vertical"
++    --   end,
++    --   "Toggle vertical term",
++    -- },
+   },
+ 
+   n = {
+     -- toggle in normal mode
+-    ["<A-i>"] = {
+-      function()
+-        require("nvterm.terminal").toggle "float"
+-      end,
+-      "Toggle floating term",
+-    },
+-
+-    ["<A-h>"] = {
+-      function()
+-        require("nvterm.terminal").toggle "horizontal"
+-      end,
+-      "Toggle horizontal term",
+-    },
+-
+-    ["<A-v>"] = {
+-      function()
+-        require("nvterm.terminal").toggle "vertical"
+-      end,
+-      "Toggle vertical term",
+-    },
++    -- ["<A-i>"] = {
++    --   function()
++    --     require("nvterm.terminal").toggle "float"
++    --   end,
++    --   "Toggle floating term",
++    -- },
++
++    -- ["<A-h>"] = {
++    --   function()
++    --     require("nvterm.terminal").toggle "horizontal"
++    --   end,
++    --   "Toggle horizontal term",
++    -- },
++    --
++    -- ["<A-v>"] = {
++    --   function()
++    --     require("nvterm.terminal").toggle "vertical"
++    --   end,
++    --   "Toggle vertical term",
++    -- },
+ 
+     -- new
+-    ["<leader>h"] = {
++    ["<leader>th"] = {
+       function()
+         require("nvterm.terminal").new "horizontal"
+       end,
+       "New horizontal term",
+     },
+ 
+-    ["<leader>v"] = {
++    ["<leader>tv"] = {
+       function()
+         require("nvterm.terminal").new "vertical"
+       end,
+diff --git a/lua/plugins/init.lua b/lua/plugins/init.lua
+index 25809b8..af5eeae 100644
+--- a/lua/plugins/init.lua
++++ b/lua/plugins/init.lua
+@@ -252,6 +252,7 @@ local default_plugins = {
+   -- Only load whichkey after all the gui
+   {
+     "folke/which-key.nvim",
++
+     keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+     init = function()
+       require("core.utils").load_mappings "whichkey"
