@@ -355,21 +355,44 @@ alias dps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}'"
 
 alias pactlsinks="pactl --format=json list sinks | jq 'map(.index, .description)'"
 
-alias xmonadrc="$EDITOR $HOME/.config/xmonad/xmonad.hs"
-alias xmobarrc="$EDITOR $HOME/.config/xmobar"
-alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+# TODO: use $EDITOR; maybe other adjustments
+# alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+alias zshrc="nvim $HOME/.zshrc && source $HOME/.zshrc"
 
 alias dc="docker-compose"
-alias vim="nvim"
+# use plain nvim
+# TODO: explore how I use $EDITOR, maybe need changes
+alias vim="nvim -u ~/.config/nvim/simple.lua"
+alias notes="neovide -- nvim -u ~/.config/nvim_simple/init.lua -c \"cd ~/notes/ | NvimTreeToggle\""
 alias ls="/usr/bin/lsd"
+
+# TODO: use $EDITOR
+# alias xmobarrc="$EDITOR $HOME/.config/xmobar"
+alias xmobarrc="nvim -c \"cd $HOME/.config/xmobar/ | e ./xmobarrc1 | set syntax=haskell | e ./xmobarrc_mobile | set syntax=haskell | NvimTreeToggle | NvimTreeClose\""
+function recompile_xmonad() {
+  cd $HOME/.config/xmonad
+  mkdir $HOME/.scripts || true
+  mkdir $HOME/.scripts/xmonad || true
+  ghc -dynamic --make xmonad.hs -i$HOME/.config/xmonad/ -ilib -fforce-recomp -main-is main -v0 -outputdir $HOME/.scripts/xmonad/build-x86_64-linux -o $HOME/.scripts/xmonad/xmonad-x86_64-linux
+  echo "xmonad recompiled; `$HOME/.scripts/xmonad/xmonad-x86_64-linux --version`"
+}
+alias xmonadrc="nvim -c \"cd $HOME/.config/xmonad | e xmonad.hs\" && recompile_xmonad"
 
 function trivyv() {
   sudo trivy image $1 --scanners vuln --severity "HIGH,CRITICAL"
 }
 
 alias f="find"
-alias codeo="code -r"
-alias codefo="code -ra"
+alias nvimswap="rm ~/.local/state/nvim/swap/*"
 
 [ -f "$HOME/projects/scripts/work.inc.sh" ] && source "$HOME/projects/scripts/work.inc.sh" 
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/martins/projects/scripts/gcloud/google-cloud-sdk/path.zsh.inc' ]; then . '/home/martins/projects/scripts/gcloud/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/martins/projects/scripts/gcloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/martins/projects/scripts/gcloud/google-cloud-sdk/completion.zsh.inc'; fi
+
+export LESS=-Ri
+alias grep="grep -i"
