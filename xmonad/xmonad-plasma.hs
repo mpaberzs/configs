@@ -27,36 +27,35 @@ import MyXmonadConfig (getConfigValue, extraKeys)
 main = do
   xmonad $ ewmh $ myConfig
   xmonad $ docks def
-    { layoutHook  = avoidStruts $ layout
-    , manageHook  = manageHook def <+> manageDocks
-    }
+    { layoutHook = layout }
 
-myConfig = kdeConfig
+myConfig = kde4Config
   { terminal    = "alacritty"
   , modMask     = mod4Mask
-  -- , borderWidth = 1
   , borderWidth = 0
-  , focusedBorderColor = "#FD7F39" -- orange
   , startupHook = startup
   , layoutHook  = layout
   , logHook     = myFadeInactiveLogHook
-  --    , logHook     = dynamicLogWithPP $ xmobarPP {
-  --    }
+  , manageHook = manageHook kde4Config <+> myManageHook
   }
   `additionalKeys` myKeys
+
+myManageHook = composeAll . concat $
+    [ [ className   =? c --> doFloat           | c <- myFloats]
+    , [ title       =? t --> doFloat           | t <- myOtherFloats]
+    , [ className   =? c --> doF (W.shift "2") | c <- webApps]
+    , [ className   =? c --> doF (W.shift "3") | c <- ircApps]
+    ]
+  where myFloats      = ["plasmashell", "krunner", "MPlayer", "Gimp"]
+        myOtherFloats = ["alsamixer"]
+	-- TODO: configure
+        webApps       = ["Firefox-bin", "Opera"] -- open on desktop 2
+        ircApps       = ["Ksirc"]                -- open on desktop 3
 
 startup = do
     -- mainly for WebStorm
     setWMName "LG3D"
-    -- vsync doesn't work too methinks
-    spawnOnce "picom --daemon --vsync"
-    spawn     $ "nitrogen --set-tiled " ++ (getConfigValue "wallpaper") ++ " &"
     spawnOnce "nm-applet --indicator &"
-    spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align right --edge top --height 22 --tint 0x00000000 --transparent true --alpha 1 &"
-    -- could edit i3lock (or use slock) compile manually making it 'dunstctl set-paused toggle &'
-    spawnOnce $ "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i " ++ (getConfigValue "screen-lock-wallpaper") ++ " &"
-    spawn     "xset s 600"
-    spawnOnce "autorandr --change"
 
 myFadeInactiveLogHook :: X ()
 myFadeInactiveLogHook = fadeInactiveLogHook fadeAmount
@@ -77,14 +76,12 @@ myKeys = [
      , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 5%-")
      , ((mod4Mask .|. shiftMask, xK_m), sendMessage $ JumpToLayout "Full")
      , ((mod4Mask, xK_d), spawn "krunner")
+     -- TODO: does not work
      , ((mod4Mask .|. shiftMask, xK_q), spawn "dbus-send --print-reply --dest=org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout int32:1 int32:0 int32:1")
-     -- TODO: change for KDE?
+     -- TODO: change for KDE
      , ((mod4Mask, xK_Print), spawn "flameshot launcher")
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
      , ((mod4Mask .|. shiftMask, xK_Print), spawn "flameshot gui --delay 3000 --clipboard")
-     , ((mod4Mask, xK_F12), spawn "xset s activate")
-     , ((mod4Mask .|. shiftMask, xK_h), spawn "dunstctl history-pop")
-     , ((mod4Mask .|. shiftMask, xK_n), spawn "notify-send -t 1000 'Notification state change' `dunstctl is-paused` && sleep 1.5 && dunstctl set-paused toggle")
      -- 
     ] ++
 
