@@ -5,18 +5,84 @@ import XMonad.Config.Desktop
 import XMonad.Util.EZConfig
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
-import Graphics.X11.ExtraTypes.XF86
 import XMonad.Prompt
 import XMonad.Prompt.Shell
 import XMonad.Layout.NoBorders
 import XMonad.Layout.LayoutCombinators    -- use the one from LayoutCombinators instead
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
-import System.IO (hPutStrLn)
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
 import qualified XMonad.StackSet as W
 import XMonad.Hooks.FadeInactive
 import XMonad.Layout.Spacing
-import System.Environment (getEnv, lookupEnv)
+import XMonad.Util.Loggers
+import XMonad.Hooks.EwmhDesktops
+
+import Graphics.X11.ExtraTypes.XF86
+
 import MyXmonadConfig (getConfigValue, extraKeys)
+
+
+main = do
+  -- xmproc <- spawnPipe $ "xmobar -x 0 " ++ (getConfigValue "xmobarrc1")
+  -- xmproc <- spawnPipe $ "xmobar -x 1 " ++ (getConfigValue "xmobarrc2")
+  -- xmonad $ easyStatusBar1 $ easyStatusBar2 $ ewmh $ myConfig
+  xmonad $ easyStatusBar1 $ easyStatusBar2 $ ewmh $ myConfig
+  xmonad $ docks def
+    { layoutHook  = avoidStruts $ layout
+    , manageHook  = manageHook def <+> manageDocks
+    }
+
+myConfig = desktopConfig
+  { terminal    = "alacritty"
+  , modMask     = mod4Mask
+  -- , borderWidth = 1
+  , borderWidth = 0
+  , focusedBorderColor = "#FD7F39" -- orange
+  , startupHook = startup
+  , layoutHook  = layout
+  , logHook     = myFadeInactiveLogHook
+  --    , logHook     = dynamicLogWithPP $ xmobarPP {
+  --    }
+  }
+  `additionalKeys` myKeys
+
+-- TODO: this needs to use MyXmonadConfig
+easyStatusBar1 = withEasySB (statusBarProp "xmobar -x 0 /home/jenotsuns/.config/xmobar/xmobarrc_mobile" (pure myXmobarPP)) defToggleStrutsKey
+easyStatusBar2 = withEasySB (statusBarProp "xmobar -x 0 /home/jenotsuns/.config/xmobar/xmobarrc_wide" (pure myXmobarPP)) defToggleStrutsKey
+
+myXmobarPP :: PP
+myXmobarPP = def
+  { ppSep             = "     "
+  , ppTitleSanitize   = xmobarStrip
+  , ppCurrent         = green       . preWrapWithSpace
+  , ppHidden          = white       . preWrapWithSpace
+  -- quick way of hiding
+  , ppHiddenNoWindows = emptyString . grey     . preWrapWithSpace
+  , ppUrgent          = red         . preWrapWithSpace
+  , ppOrder           = \[ws, l, _, wins] -> [ws, wins]
+  , ppExtras          = [logTitles formatFocused formatUnfocused]
+  }
+  where
+    preWrapWithSpace = wrap " " ""
+    formatFocused    = orange   . ppWindowTitle
+    -- formatUnfocused  = (\x -> "") . lowWhite . ppWindowTitle
+    emptyString      = \x -> ""
+    -- don't show unfocused name
+    formatUnfocused  = emptyString
+
+    ppWindowTitle :: String -> String
+    ppWindowTitle = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 255
+
+    green, grey, lowWhite, red, white, orange :: String -> String
+    orange   = xmobarColor "#ee9a00" ""
+    white    = xmobarColor "#f8f8f2" ""
+    red      = xmobarColor "#ff5555" ""
+    lowWhite = xmobarColor "#bbbbbb" ""
+    grey     = xmobarColor "#444444" ""
+    green    = xmobarColor "#009484" ""
+    
+
 
 startup = do
     -- mainly for WebStorm
@@ -35,29 +101,6 @@ myFadeInactiveLogHook :: X ()
 myFadeInactiveLogHook = fadeInactiveLogHook fadeAmount
   where fadeAmount = 0.95
 
-main = do
-  -- when in work with primary horizontal and left of it vertical secondary
-  -- xmproc <- spawnPipe "xmobar -x 0 " ++ (getConfigValue "home") ++ "/.config/xmobar/xmobarrc1"
-  -- xmproc <- spawnPipe "xmobar -x 1 " ++ (getConfigValue "home") ++ "/.config/xmobar/xmobarrc2"
-  -- when only laptop screen
-  xmproc <- spawnPipe $ "xmobar -x 0 " ++ (getConfigValue "xmobarrc")
-  xmonad $ desktopConfig
-    { terminal    = "alacritty"
-    , modMask     = mod4Mask
-    , borderWidth = 1
-    , focusedBorderColor = "#FD7F39" -- orange
-    , startupHook = startup
-    , layoutHook  = layout
-    , logHook     = myFadeInactiveLogHook
---    , logHook     = dynamicLogWithPP $ xmobarPP {
---    }
-    }
-    `additionalKeys` myKeys
-  xmonad $ docks def
-    { layoutHook  = avoidStruts $ layout
-    , manageHook  = manageHook def <+> manageDocks
-    }
-
 myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 
 myKeys = [
@@ -71,30 +114,32 @@ myKeys = [
      , ((0, xF86XK_AudioStop),         spawn "playerctl stop")
      , ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +5%")
      , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 5%-")
-     , ((mod4Mask, xK_F12), spawn "xset s activate")
-     , ((mod4Mask .|. shiftMask, xK_F12), spawn $ (getConfigValue "home") ++ "/.scripts/suspend-menu/suspend-menu.sh")
-     , ((mod4Mask, xK_d), spawn $ (getConfigValue "home") ++ "/.scripts/menu/menu.sh")
-     , ((mod4Mask .|. shiftMask, xK_d), spawn "dmenu_run -m 0 -fn 'Roboto 11'")
-     , ((mod4Mask, xK_p), spawn "autorandr --change")
-     , ((mod4Mask, xK_Print), spawn "flameshot")
+     , ((mod4Mask, xK_d), spawn "dmenu_run -m 0 -fn 'Roboto 11'")
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
      , ((mod4Mask .|. shiftMask, xK_m), sendMessage $ JumpToLayout "Full")
      , ((mod4Mask .|. shiftMask, xK_n), spawn "notify-send -t 1000 'Notification state change' `dunstctl is-paused` && sleep 1.5 && dunstctl set-paused toggle")
      , ((mod4Mask .|. shiftMask, xK_h), spawn "dunstctl history-pop")
+     , ((mod4Mask, xK_p), spawn "autorandr --change")
+     , ((mod4Mask, xK_Print), spawn "flameshot launcher")
+     , ((mod4Mask .|. shiftMask, xK_Print), spawn "flameshot gui --delay 3000 --clipboard")
+     , ((mod4Mask, xK_F12), spawn "xset s activate")
     ] ++
 
     extraKeys ++
 
+    -- TODO: document what is this doing in details
     [((m .|. mod4Mask, k), windows $ f i)
          | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
          , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
     ]
+
 layout = avoidStruts(tiled ||| Mirror tiled ||| noBorders Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = smartSpacing 10 $ Tall nmaster delta ratio
      
      -- The default number of windows in the master pane
+     -- TODO: I think this needs to be something like 5 for me, give it a try
      nmaster = 1
      
      -- Default proportion of screen occupied by master pane
