@@ -8,7 +8,7 @@ Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
        , bgColor = "black"
        , fgColor = "grey"
        -- , position = TopP 0 80
-       , position = Static { xpos = 0, ypos = 0, width = 1080, height = 24 }
+       , position = Static { xpos = 2560, ypos = 0, width = 1440, height = 24 }
        , lowerOnStart = True
        , commands = [
          Run Cpu ["-t", "<fn=1></fn><hspace=5/><total>%"] 30
