@@ -349,6 +349,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# TODO: think about this
 bindkey \^U backward-kill-line
 
 alias dps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}'"
@@ -360,30 +361,50 @@ alias pactlsinks="pactl --format=json list sinks | jq 'map(.index, .description)
 alias zshrc="nvim $HOME/.zshrc && source $HOME/.zshrc"
 
 alias dc="docker-compose"
+function dockerbp() {
+  # TODO
+  # local dockerfile=$2 || "Dockerfile-prod" 
+  docker build -f Dockerfile-prod -t $1 . --no-cache
+}
+
 # use plain nvim
 # TODO: explore how I use $EDITOR, maybe need changes
-alias vim="nvim -u ~/.config/nvim/simple.lua"
-alias notes="neovide -- nvim -u ~/.config/nvim_simple/init.lua -c \"cd ~/notes/ | NvimTreeToggle\""
+alias vim="nvim -u $HOME/.config/nvim_simple/init.lua"
+# alias notes="neovide -- nvim -u ~/.config/nvim_simple/init.lua -c \"cd ~/notes/ | NvimTreeToggle\""
+alias notes="neovide -- -u $HOME/.config/nvim_simple/init.lua -c \"cd ~/notes/\""
 alias ls="/usr/bin/lsd"
 
+### XMonad
 # TODO: use $EDITOR
 # alias xmobarrc="$EDITOR $HOME/.config/xmobar"
 alias xmobarrc="nvim -c \"cd $HOME/.config/xmobar/ | e ./xmobarrc1 | set syntax=haskell | e ./xmobarrc_mobile | set syntax=haskell | NvimTreeToggle | NvimTreeClose\""
 function recompile_xmonad() {
   cd $HOME/.config/xmonad
+  CONFIG_FILE=`find $HOME/.config/xmonad/$1.hs -printf %f || echo 'xmonad.hs'`
+  CONFIG_TYPE=`echo ${CONFIG_FILE:0:-3}`
   mkdir $HOME/.scripts || true
   mkdir $HOME/.scripts/xmonad || true
-  ghc -dynamic --make xmonad.hs -i$HOME/.config/xmonad/ -ilib -fforce-recomp -main-is main -v0 -outputdir $HOME/.scripts/xmonad/build-x86_64-linux -o $HOME/.scripts/xmonad/xmonad-x86_64-linux
-  echo "xmonad recompiled; `$HOME/.scripts/xmonad/xmonad-x86_64-linux --version`"
+  ghc -dynamic --make $CONFIG_FILE -i$HOME/.config/xmonad/ -ilib -fforce-recomp -main-is main -v0 -outputdir $HOME/.scripts/$CONFIG_TYPE/build-x86_64-linux -o $HOME/.scripts/$CONFIG_TYPE/xmonad-x86_64-linux
+  echo "xmonad $CONFIG_TYPE recompiled; `$HOME/.scripts/$CONFIG_TYPE/xmonad-x86_64-linux --version`"
 }
-alias xmonadrc="nvim -c \"cd $HOME/.config/xmonad | e xmonad.hs\" && recompile_xmonad"
+alias xmonadrcplasma="nvim -c \"cd $HOME/.config/xmonad | e xmonad-plasma.hs\" && recompile_xmonad xmonad-plasma"
+alias xmonadrc="nvim -c \"cd $HOME/.config/xmonad | e xmonad.hs\" && recompile_xmonad xmonad"
+###
 
 function trivyv() {
   sudo trivy image $1 --scanners vuln --severity "HIGH,CRITICAL"
 }
 
+# find cmd shortening
 alias f="find"
+# clear neovim swap
 alias nvimswap="rm ~/.local/state/nvim/swap/*"
+#
+# case insensitive
+export LESS=-Ri
+# case insensitive
+# alias grep="grep -i --color"
+alias grep="grep --color"
 
 [ -f "$HOME/projects/scripts/work.inc.sh" ] && source "$HOME/projects/scripts/work.inc.sh" 
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
@@ -394,5 +415,3 @@ if [ -f '/home/martins/projects/scripts/gcloud/google-cloud-sdk/path.zsh.inc' ];
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/martins/projects/scripts/gcloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/martins/projects/scripts/gcloud/google-cloud-sdk/completion.zsh.inc'; fi
 
-export LESS=-Ri
-alias grep="grep -i"
