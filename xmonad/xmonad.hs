@@ -17,6 +17,7 @@ import XMonad.Hooks.FadeInactive
 import XMonad.Layout.Spacing
 import XMonad.Util.Loggers
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Actions.WorkspaceNames as WN
 
 import Graphics.X11.ExtraTypes.XF86
 
@@ -24,13 +25,10 @@ import MyXmonadConfig (getConfigValue, extraKeys)
 
 
 main = do
-  -- xmproc <- spawnPipe $ "xmobar -x 0 " ++ (getConfigValue "xmobarrc1")
-  -- xmproc <- spawnPipe $ "xmobar -x 1 " ++ (getConfigValue "xmobarrc2")
-  -- xmonad $ easyStatusBar1 $ easyStatusBar2 $ ewmh $ myConfig
   xmonad $ easyStatusBar1 $ easyStatusBar2 $ ewmh $ myConfig
   xmonad $ docks def
     { layoutHook  = avoidStruts $ layout
-    , manageHook  = manageHook def <+> manageDocks
+    , manageHook  = manageHook def <+> myManageHook <+> manageDocks
     }
 
 myConfig = desktopConfig
@@ -46,6 +44,17 @@ myConfig = desktopConfig
   --    }
   }
   `additionalKeys` myKeys
+
+myManageHook = composeAll . concat $
+    [ [ className   =? c --> doFloat           | c <- myFloats]
+    , [ title       =? t --> doFloat           | t <- myOtherFloats]
+    , [ className   =? c --> doF (W.shift "2") | c <- webApps]
+    , [ className   =? c --> doF (W.shift "3") | c <- ircApps]
+    ]
+  where myFloats      = ["plasmashell", "krunner", "Gimp"]
+        myOtherFloats = []
+        webApps       = [] -- open on desktop 2
+        ircApps       = [] -- open on desktop 3
 
 -- TODO: this needs to use MyXmonadConfig
 easyStatusBar1 = withEasySB (statusBarProp "xmobar -x 0 /home/jenotsuns/.config/xmobar/xmobarrc_mobile" (pure myXmobarPP)) defToggleStrutsKey
@@ -91,17 +100,24 @@ startup = do
     spawnOnce "picom --daemon --vsync"
     spawn     $ "nitrogen --set-tiled " ++ (getConfigValue "wallpaper") ++ " &"
     spawnOnce "nm-applet --indicator &"
-    spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align right --edge top --height 22 --tint 0x00000000 --transparent true --alpha 1 &"
+    spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align right --edge top --height 24 --tint 0x00000000 --transparent true --alpha 1 &"
     -- could edit i3lock (or use slock) compile manually making it 'dunstctl set-paused toggle &'
     spawnOnce $ "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i " ++ (getConfigValue "screen-lock-wallpaper") ++ " &"
     spawn     "xset s 600"
     spawnOnce "autorandr --change"
+    WN.setWorkspaceName "web"  "1"
+    WN.setWorkspaceName "code" "2"
+    WN.setWorkspaceName "db"   "3"
+    WN.setWorkspaceName "com"  "4"
+    WN.setWorkspaceName "pers" "5"
+    WN.setWorkspaceName "doc"  "6"
+    WN.setWorkspaceName "misc" "7"
+    WN.setWorkspaceName "run"  "8"
+    WN.setWorkspaceName "sh"   "9"
 
 myFadeInactiveLogHook :: X ()
 myFadeInactiveLogHook = fadeInactiveLogHook fadeAmount
   where fadeAmount = 0.95
-
-myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 
 myKeys = [
        ((0, xF86XK_PowerDown),         spawn "systemctl suspend")
@@ -116,7 +132,8 @@ myKeys = [
      , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 5%-")
      , ((mod4Mask, xK_d), spawn "dmenu_run -m 0 -fn 'Roboto 11'")
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
-     , ((mod4Mask .|. shiftMask, xK_m), sendMessage $ JumpToLayout "Full")
+     , ((mod4Mask, xK_Return), sendMessage $ JumpToLayout "Full")
+     , ((mod4Mask .|. shiftMask, xK_m), windows W.swapMaster)
      , ((mod4Mask .|. shiftMask, xK_n), spawn "notify-send -t 1000 'Notification state change' `dunstctl is-paused` && sleep 1.5 && dunstctl set-paused toggle")
      , ((mod4Mask .|. shiftMask, xK_h), spawn "dunstctl history-pop")
      , ((mod4Mask, xK_p), spawn "autorandr --change")
@@ -132,6 +149,8 @@ myKeys = [
          | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
          , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
     ]
+
+myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 
 layout = avoidStruts(tiled ||| Mirror tiled ||| noBorders Full)
   where

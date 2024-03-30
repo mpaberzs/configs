@@ -47,10 +47,9 @@ myManageHook = composeAll . concat $
     , [ className   =? c --> doF (W.shift "3") | c <- ircApps]
     ]
   where myFloats      = ["plasmashell", "krunner", "MPlayer", "Gimp"]
-        myOtherFloats = ["alsamixer"]
-	-- TODO: configure
-        webApps       = ["Firefox-bin", "Opera"] -- open on desktop 2
-        ircApps       = ["Ksirc"]                -- open on desktop 3
+        myOtherFloats = []
+        webApps       = [] -- open on desktop 2
+        ircApps       = [] -- open on desktop 3
 
 startup = do
     -- mainly for WebStorm
