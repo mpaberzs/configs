@@ -39,4 +39,8 @@ require("lazy").setup({
     },
     lazy = false,
   }
+  -- TODO
+  -- {'marks'}
+  -- {'gitsigns'}
+  -- {'somestatusbarstuff'}
 }, {})

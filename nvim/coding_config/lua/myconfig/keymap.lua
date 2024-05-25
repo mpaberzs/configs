@@ -25,7 +25,7 @@ vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left>
 -- vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end)
 -- format with prettier
 -- TODO: lang dependent
-vim.keymap.set("n", "<leader>f", "<cmd>%! prettier --parser=typescript<CR>")
+vim.keymap.set("n", "<leader>f", "<cmd>%! prettier --parser=typescript || LspZeroFormat <CR>")
 
 -- cycle through buffers using tab
 vim.keymap.set("n", "<Tab>", ":bn<CR>")
