@@ -369,24 +369,30 @@ function dockerbp() {
 
 # use plain nvim
 # TODO: explore how I use $EDITOR, maybe need changes
-alias vim="nvim -u $HOME/.config/nvim_simple/init.lua"
-# alias notes="neovide -- nvim -u ~/.config/nvim_simple/init.lua -c \"cd ~/notes/ | NvimTreeToggle\""
-alias notes="neovide -- -u $HOME/.config/nvim_simple/init.lua -c \"cd ~/notes/\""
+# alias vim="nvim -u $HOME/.config/nvim_simple/init.lua"
+alias vim="nvim"
+alias notes="neovide ~/Notes/ -- -u $HOME/.config/nvim/init.lua -c \"cd ~/Notes/\""
 alias ls="/usr/bin/lsd"
 
 ### XMonad
 # TODO: use $EDITOR
 # alias xmobarrc="$EDITOR $HOME/.config/xmobar"
 alias xmobarrc="nvim -c \"cd $HOME/.config/xmobar/ | e ./xmobarrc1 | set syntax=haskell | e ./xmobarrc_mobile | set syntax=haskell | NvimTreeToggle | NvimTreeClose\""
+
+# required since I want to use specific config file
+# TODO: I think some lines can be improved
 function recompile_xmonad() {
   cd $HOME/.config/xmonad
-  CONFIG_FILE=`find $HOME/.config/xmonad/$1.hs -printf %f || echo 'xmonad.hs'`
-  CONFIG_TYPE=`echo ${CONFIG_FILE:0:-3}`
-  mkdir $HOME/.scripts || true
-  mkdir $HOME/.scripts/xmonad || true
+  CONFIG_FILE=$(find $HOME/.config/xmonad/$1.hs -printf %f || echo 'xmonad.hs')
+  CONFIG_TYPE=$(echo ${CONFIG_FILE:0:-3})
+  mkdir -v $HOME/.scripts 2> /dev/null
+  mkdir -v $HOME/.scripts/xmonad 2> /dev/null
   ghc -dynamic --make $CONFIG_FILE -i$HOME/.config/xmonad/ -ilib -fforce-recomp -main-is main -v0 -outputdir $HOME/.scripts/$CONFIG_TYPE/build-x86_64-linux -o $HOME/.scripts/$CONFIG_TYPE/xmonad-x86_64-linux
-  echo "xmonad $CONFIG_TYPE recompiled; `$HOME/.scripts/$CONFIG_TYPE/xmonad-x86_64-linux --version`"
+  echo "$CONFIG_TYPE recompiled"
+  # TODO: why does it get displayed twice?
+  $HOME/.scripts/$CONFIG_TYPE/xmonad-x86_64-linux --version
 }
+
 alias xmonadrcplasma="nvim -c \"cd $HOME/.config/xmonad | e xmonad-plasma.hs\" && recompile_xmonad xmonad-plasma"
 alias xmonadrc="nvim -c \"cd $HOME/.config/xmonad | e xmonad.hs\" && recompile_xmonad xmonad"
 ###
@@ -405,6 +411,10 @@ export LESS=-Ri
 # case insensitive
 # alias grep="grep -i --color"
 alias grep="grep --color"
+
+alias df="df -h --type ext4 --type vfat"
+
+alias nvimrc="cd ~/.config/nvim && nvim"
 
 [ -f "$HOME/projects/scripts/work.inc.sh" ] && source "$HOME/projects/scripts/work.inc.sh" 
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
