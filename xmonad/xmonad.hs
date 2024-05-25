@@ -25,7 +25,7 @@ import MyXmonadConfig (getConfigValue, extraKeys)
 
 
 main = do
-  xmonad $ easyStatusBar1 $ easyStatusBar2 $ ewmh $ myConfig
+  xmonad $ easyStatusBar $ ewmh $ myConfig
   xmonad $ docks def
     { layoutHook  = avoidStruts $ layout
     , manageHook  = manageHook def <+> myManageHook <+> manageDocks
@@ -34,9 +34,10 @@ main = do
 myConfig = desktopConfig
   { terminal    = "alacritty"
   , modMask     = mod4Mask
-  -- , borderWidth = 1
+  -- border setup
   , borderWidth = 0
   , focusedBorderColor = "#FD7F39" -- orange
+  --
   , startupHook = startup
   , layoutHook  = layout
   , logHook     = myFadeInactiveLogHook
@@ -57,8 +58,7 @@ myManageHook = composeAll . concat $
         ircApps       = [] -- open on desktop 3
 
 -- TODO: this needs to use MyXmonadConfig
-easyStatusBar1 = withEasySB (statusBarProp "xmobar -x 0 /home/jenotsuns/.config/xmobar/xmobarrc_mobile" (pure myXmobarPP)) defToggleStrutsKey
-easyStatusBar2 = withEasySB (statusBarProp "xmobar -x 0 /home/jenotsuns/.config/xmobar/xmobarrc_wide" (pure myXmobarPP)) defToggleStrutsKey
+easyStatusBar = withEasySB (statusBarProp "xmobar -x 0 ~/.config/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 
 myXmobarPP :: PP
 myXmobarPP = def
@@ -90,34 +90,41 @@ myXmobarPP = def
     lowWhite = xmobarColor "#bbbbbb" ""
     grey     = xmobarColor "#444444" ""
     green    = xmobarColor "#009484" ""
-    
-
 
 startup = do
     -- mainly for WebStorm
     setWMName "LG3D"
+    -- notifications
+    spawnOnce "dunst &"
+    -- statusbar
+    spawnOnce "xmobar -x 0 ~/.config/xmobar/xmobarrc &"
     -- vsync doesn't work too methinks
     spawnOnce "picom --daemon --vsync"
+    -- wallpaper
     spawn     $ "nitrogen --set-tiled " ++ (getConfigValue "wallpaper") ++ " &"
+    -- NetworkManager applet for auto-connect using pw from vault and NM UI
     spawnOnce "nm-applet --indicator &"
-    spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align right --edge top --height 24 --tint 0x00000000 --transparent true --alpha 1 &"
+    -- systray
+    spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align center --edge top --height 40 --tint 0x00000000 --transparent true --alpha 1 &"
     -- could edit i3lock (or use slock) compile manually making it 'dunstctl set-paused toggle &'
+    -- TODO: use slock?
     spawnOnce $ "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i " ++ (getConfigValue "screen-lock-wallpaper") ++ " &"
     spawn     "xset s 600"
     spawnOnce "autorandr --change"
-    WN.setWorkspaceName "web"  "1"
-    WN.setWorkspaceName "code" "2"
-    WN.setWorkspaceName "db"   "3"
-    WN.setWorkspaceName "com"  "4"
-    WN.setWorkspaceName "pers" "5"
-    WN.setWorkspaceName "doc"  "6"
-    WN.setWorkspaceName "misc" "7"
-    WN.setWorkspaceName "run"  "8"
-    WN.setWorkspaceName "sh"   "9"
+    -- TODO: this did not work
+    -- WN.setWorkspaceName "web"  "1"
+    -- WN.setWorkspaceName "code" "2"
+    -- WN.setWorkspaceName "db"   "3"
+    -- WN.setWorkspaceName "com"  "4"
+    -- WN.setWorkspaceName "pers" "5"
+    -- WN.setWorkspaceName "doc"  "6"
+    -- WN.setWorkspaceName "misc" "7"
+    -- WN.setWorkspaceName "run"  "8"
+    -- WN.setWorkspaceName "sh"   "9"
 
 myFadeInactiveLogHook :: X ()
 myFadeInactiveLogHook = fadeInactiveLogHook fadeAmount
-  where fadeAmount = 0.95
+  where fadeAmount = 0.90
 
 myKeys = [
        ((0, xF86XK_PowerDown),         spawn "systemctl suspend")
@@ -138,7 +145,7 @@ myKeys = [
      , ((mod4Mask .|. shiftMask, xK_h), spawn "dunstctl history-pop")
      , ((mod4Mask, xK_p), spawn "autorandr --change")
      , ((mod4Mask, xK_Print), spawn "flameshot launcher")
-     , ((mod4Mask .|. shiftMask, xK_Print), spawn "flameshot gui --delay 3000 --clipboard")
+     , ((mod4Mask .|. shiftMask, xK_Print), spawn "flameshot gui --delay 3000 --raw | xsel -b")
      , ((mod4Mask, xK_F12), spawn "xset s activate")
     ] ++
 
