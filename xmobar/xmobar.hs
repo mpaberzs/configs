@@ -1,0 +1,34 @@
+-- cabal install --overwrite-policy=always --flags=with_xft --flags=with_iwlib --flags=with_alsa
+-- font awesome 6
+-- Roboto font
+Config { font = "Roboto 14"
+       , additionalFonts = [ 
+             "Font Awesome 6 Free Solid 14"
+         ]
+       , bgColor = "black"
+       , fgColor = "grey"
+       -- , position = Static { xpos = 0, ypos = 0, width = 3360, height = 24 }
+       , position = TopH 40
+       , lowerOnStart = True
+       , commands = [
+           Run Volume "default" "Master" ["-t", "<status><hspace=10/><volume>", "--", "-o", "<fn=1></fn>", "-O", "<fn=1></fn>", "-C", "#ee9a00", "-c", "#ee9a00"] 10
+           , Run Wireless "wlp0s20f3" ["-t", "<essid>"] 10
+           , Run Network "eeedo-vpn" ["-L","0","-H","32","-x","","--normal","green","--high","red", "-t", "<fc=#aa0000></fc><hspace=20/>"] 10
+    		   , Run Date "<fc=#009484><fn=1></fn><hspace=8/>%a %b %_d<hspace=15/><fn=1></fn><hspace=8/>%H:%M</fc>" "date" 10
+		       , Run Battery [
+               "-t", "<acstatus><hspace=8/><left>%",
+               "--",
+               "-O", "<fn=1></fn>",
+               "-i", "<fn=1></fn>",
+               "-o", "<fn=1></fn>",
+			         "-h", "green",
+               "-l", "red"
+    	     ] 10
+           , Run XMonadLog
+       ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<hspace=10/>%XMonadLog% }{ <fn=1></fn><hspace=10/>%wlp0s20f3wi%<hspace=20/>%eeedo-vpn%<fc=#ee9a00>%default:Master%<hspace=15/>%battery%</fc><hspace=20/>%date%<hspace=10/>"
+       , textOffsets = [-1,40,-1]
+       -- , iconOffset = 1
+       }
