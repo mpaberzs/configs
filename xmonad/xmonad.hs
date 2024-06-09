@@ -58,7 +58,7 @@ myManageHook = composeAll . concat $
         ircApps       = [] -- open on desktop 3
 
 -- TODO: this needs to use MyXmonadConfig
-easyStatusBar = withEasySB (statusBarProp "xmobar -x 0 ~/.config/xmobar/xmobarrc.hs" (pure myXmobarPP)) defToggleStrutsKey
+easyStatusBar = withEasySB (statusBarProp "xmobar -x 0 ~/.config/xmobar/xmobar.hs" (pure myXmobarPP)) defToggleStrutsKey
 
 myXmobarPP :: PP
 myXmobarPP = def
@@ -97,7 +97,7 @@ startup = do
     -- notifications
     spawnOnce "dunst &"
     -- statusbar
-    spawnOnce "xmobar -x 0 ~/.config/xmobar/xmobarrc.hs &"
+    spawnOnce "xmobar -x 0 ~/.config/xmobar/xmobar.hs &"
     -- vsync doesn't work too methinks
     spawnOnce "picom --daemon --vsync"
     -- wallpaper
