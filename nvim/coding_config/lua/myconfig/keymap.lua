@@ -14,13 +14,15 @@ vim.keymap.set("n", "J", "mzJ`z")
 -- Q is evil appearently
 vim.keymap.set("n", "Q", "<nop>")
 
-
 -- centered search results
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- search-replace the word under the cursor
-vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+vim.keymap.set("n", "<leader>S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+
+-- search the word under the cursor
+vim.keymap.set("n", "<leader>s", ":/\\<<C-r><C-w>\\><Left><Left><Left>")
 
 -- vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end)
 -- format with prettier
@@ -28,13 +30,16 @@ vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left>
 vim.keymap.set("n", "<leader>f", "<cmd>%! prettier --parser=typescript || LspZeroFormat <CR>")
 
 -- cycle through buffers using tab
-vim.keymap.set("n", "<Tab>", ":bn<CR>")
--- TODO: doesnt work!
--- vim.keymap.set("n", "<Shift>-<Tab>", ":bp<CR>")
-vim.keymap.set("n", "<leader>x", ":bd<CR>")
+vim.keymap.set("n", "<Tab>", "<cmd>:bn<CR>")
+
+-- close buffer
+vim.keymap.set("n", "<leader>x", "<cmd>:bd<CR>")
 
 -- classic save shortcut
-vim.keymap.set("n", "<C-s>", ":w<CR>")
+vim.keymap.set("n", "<C-s>", "<cmd>:w<CR>")
+
+-- TODO: classic save as shortcut -- does not work
+vim.keymap.set("n", "<Shift-C-s>", ":sav")
 
 -- bind ctrl+c as save (for block edits)
 vim.keymap.set("i", "<C-c>", "<Esc>")
