@@ -1,7 +1,21 @@
 local builtin = require('telescope.builtin')
--- vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+
 vim.keymap.set('n', '<leader>fw', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>ff', function() builtin.git_files({ show_untracked = true, use_git_root = false }); end, {})
+
+vim.keymap.set('n', '<leader>fs', function() 
+  builtin.grep_string({ search = vim.fn.input("search string: ") }); 
+end, {})
+
+vim.keymap.set('n', '<leader>ff', function() 
+  try_git_files = function() builtin.git_files({ show_untracked = true, use_git_root = false }); end
+  try_find_files = function() builtin.find_files({}); end
+
+  -- if not git dir then try to find regular files
+  if pcall(try_git_files) then
+  else
+    try_find_files()
+  end
+end, {})
 
 vim.keymap.set('n', '<leader>fdf', function() 
   builtin.git_files({ show_untracked = true, use_git_root = false, cwd = vim.fn.input("files in dir: ") }); 
@@ -28,18 +42,7 @@ require('telescope').setup{
       "--with-filename",
       "--line-number",
       "--column",
+      "--case-sensitive"
     }
-  },
-  pickers = {
-    find_files = {
-      additional_args = {
-        "--smart-case",
-      }
-    },
-    git_files = {
-      additional_args = {
-        "--smart-case",
-      }
-    },
   }
 }
