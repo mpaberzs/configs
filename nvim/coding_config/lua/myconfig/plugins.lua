@@ -38,6 +38,13 @@ require("lazy").setup({
         -- add any options here
     },
     lazy = false,
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    config = true
+    -- use opts = {} for passing setup options
+    -- this is equalent to setup({}) function
   }
   -- TODO
   -- {'marks'}
