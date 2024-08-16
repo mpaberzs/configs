@@ -7,7 +7,7 @@ Config { font = "Roboto 14"
          ]
        , bgColor = "black"
        , fgColor = "grey"
-       , position = Static { xpos = 0, ypos = 0, width = 3360, height = 24 }
+       , position = TopH 40
        , lowerOnStart = True
        , commands = [
            Run Volume "default" "Master" ["-t", "<status><hspace=10/><volume>", "--", "-o", "<fn=1></fn>", "-O", "<fn=1></fn>", "-C", "#ee9a00", "-c", "#ee9a00"] 10
@@ -27,7 +27,7 @@ Config { font = "Roboto 14"
        ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%XMonadLog% }{ <fn=1></fn><hspace=10/>%wlp0s20f3wi%<hspace=20/>%eeedo-vpn%<fc=#ee9a00>%default:Master%<hspace=15/>%battery%</fc><hspace=20/>%date%"
+       , template = "<hspace=10/>%XMonadLog% }{ <fn=1></fn><hspace=10/>%wlp0s20f3wi%<hspace=20/>%eeedo-vpn%<fc=#ee9a00>%default:Master%<hspace=15/>%battery%</fc><hspace=20/>%date%<hspace=10/>"
        , textOffsets = [-1,40,-1]
        -- , iconOffset = 1
        }
