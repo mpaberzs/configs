@@ -18,12 +18,6 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- search-replace the word under the cursor
-vim.keymap.set("n", "<leader>S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
-
--- search the word under the cursor
-vim.keymap.set("n", "<leader>s", ":/\\<<C-r><C-w>\\><Left><Left><Left>")
-
 -- vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end)
 -- format with prettier
 -- TODO: lang dependent
@@ -43,3 +37,14 @@ vim.keymap.set("n", "<Shift-C-s>", ":sav")
 
 -- bind ctrl+c as save (for block edits)
 vim.keymap.set("i", "<C-c>", "<Esc>")
+
+-- search the word under the cursor
+vim.keymap.set("n", "<leader>s", ":/\\<<C-r><C-w>\\><Left><Left><Left>")
+
+-- search-replace the word under the cursor
+vim.keymap.set("n", "<leader>S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+
+vim.keymap.set("n", "<leader>vf", "^vf{%")
+-- TODO: investigate why "^f}v%^" does not work
+vim.keymap.set("n", "<leader>Vf", "v%^")
+
