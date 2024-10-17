@@ -23,8 +23,13 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- TODO: lang dependent
 vim.keymap.set("n", "<leader>f", "<cmd>%! prettier --parser=typescript || LspZeroFormat <CR>")
 
+vim.keymap.set("n", "<leader>T", "<cmd>:tabnew<CR>")
+
 -- cycle through buffers using tab
 vim.keymap.set("n", "<Tab>", "<cmd>:bn<CR>")
+
+-- cycle through tabs using leader + TAB
+vim.keymap.set("n", "<leader><Tab>", "<cmd>:tabnext<CR>")
 
 -- close buffer
 vim.keymap.set("n", "<leader>x", "<cmd>:bd<CR>")
@@ -40,6 +45,7 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 
 -- search the word under the cursor
 vim.keymap.set("n", "<leader>s", ":/\\<<C-r><C-w>\\><Left><Left><Left>")
+vim.keymap.set("n", "<leader>sx", ":noh<CR>")
 
 -- search-replace the word under the cursor
 vim.keymap.set("n", "<leader>S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
@@ -48,3 +54,5 @@ vim.keymap.set("n", "<leader>vf", "^vf{%")
 -- TODO: investigate why "^f}v%^" does not work
 vim.keymap.set("n", "<leader>Vf", "v%^")
 
+vim.keymap.set("n", "<leader>X", ":bufdo bd<CR>")
+-- vim.keymap.set("n", "", "<cmd>:messages")
