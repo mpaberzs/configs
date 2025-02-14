@@ -32,17 +32,13 @@ main = do
     }
 
 myConfig = desktopConfig
-  { terminal    = "alacritty"
+  { terminal    = "wezterm"
   , modMask     = mod4Mask
   -- border setup
-  , borderWidth = 0
+  , borderWidth = 3
   , focusedBorderColor = "#FD7F39" -- orange
-  --
   , startupHook = startup
   , layoutHook  = layout
-  , logHook     = myFadeInactiveLogHook
-  --    , logHook     = dynamicLogWithPP $ xmobarPP {
-  --    }
   }
   `additionalKeys` myKeys
 
@@ -122,10 +118,6 @@ startup = do
     -- WN.setWorkspaceName "run"  "8"
     -- WN.setWorkspaceName "sh"   "9"
 
-myFadeInactiveLogHook :: X ()
-myFadeInactiveLogHook = fadeInactiveLogHook fadeAmount
-  where fadeAmount = 0.90
-
 myKeys = [
        ((0, xF86XK_PowerDown),         spawn "systemctl suspend")
      , ((0, xF86XK_AudioRaiseVolume),  spawn "amixer -D pulse sset Master 5%+")
@@ -141,11 +133,17 @@ myKeys = [
      , ((mod4Mask .|. shiftMask, xK_r), shellPrompt def)
      , ((mod4Mask, xK_Return), sendMessage $ JumpToLayout "Full")
      , ((mod4Mask .|. shiftMask, xK_m), windows W.swapMaster)
-     , ((mod4Mask .|. shiftMask, xK_n), spawn "notify-send -t 1000 'Notification state change' `dunstctl is-paused` && sleep 1.5 && dunstctl set-paused toggle")
+     -- , ((mod4Mask .|. shiftMask, xK_n), spawn "notify-send -t 1000 'Notification state change' `dunstctl is-paused` && sleep 1.5 && dunstctl set-paused toggle")
+     , ((mod4Mask .|. shiftMask, xK_n), spawn "alacritty -e node")
+     , ((mod4Mask .|. shiftMask, xK_v), spawn "alacritty -e nvim")
      , ((mod4Mask .|. shiftMask, xK_h), spawn "dunstctl history-pop")
+     -- trigger change to related profile if didn't switch automatically
      , ((mod4Mask, xK_p), spawn "autorandr --change")
-     , ((mod4Mask, xK_Print), spawn "flameshot launcher")
-     , ((mod4Mask .|. shiftMask, xK_Print), spawn "flameshot gui --delay 3000 --raw | xsel -b")
+     -- switch to laptop screen only
+     , ((mod4Mask .|. shiftMask, xK_p), spawn "autorandr --load mobile")
+     -- take & save screenshot to ~/Pictures/
+     , ((mod4Mask, xK_Print), spawn "flameshot gui --path /home/martins/Pictures/")
+     , ((mod4Mask .|. shiftMask, xK_Print), spawn "flameshot gui --clipboard --delay 3000")
      , ((mod4Mask, xK_F12), spawn "xset s activate")
     ] ++
 
