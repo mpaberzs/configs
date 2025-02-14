@@ -8,7 +8,9 @@ import XMonad.Util.Run
 import XMonad.Prompt
 import XMonad.Prompt.Shell
 import XMonad.Layout.NoBorders
+import XMonad.Layout.BinaryColumn
 import XMonad.Layout.LayoutCombinators    -- use the one from LayoutCombinators instead
+import XMonad.Layout.Fullscreen
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
@@ -21,15 +23,27 @@ import XMonad.Actions.WorkspaceNames as WN
 
 import Graphics.X11.ExtraTypes.XF86
 
-import MyXmonadConfig (getConfigValue, extraKeys)
-
+-- FIXME: separate
+myXmonadConfig = [
+    ("home", "/home/martins")
+  , ("wallpaper", "/home/martins/Downloads/wave-Dark-arch.jpg")
+  , ("screen-lock-wallpaper", "/home/martins/Downloads/wave-Light-arch.png")
+  , ("xmobarrc", "/home/martins/.config/xmobar/xmobarrc")
+  , ("xmobarrc1", "/home/martins/.config/xmobar/xmobarrc1")
+  , ("xmobarrc2", "/home/martins/.config/xmobar/xmobarrc2")
+  ]
 
 main = do
   xmonad $ easyStatusBar $ ewmh $ myConfig
   xmonad $ docks def
-    { layoutHook  = avoidStruts $ layout
+    { layoutHook  = layout
     , manageHook  = manageHook def <+> myManageHook <+> manageDocks
     }
+
+xmobarEscape :: String -> String
+xmobarEscape [] = []
+xmobarEscape s = "<raw="++len++":"++s++"/>"
+  where len = show $ length s
 
 myConfig = desktopConfig
   { terminal    = "wezterm"
@@ -97,14 +111,14 @@ startup = do
     -- vsync doesn't work too methinks
     spawnOnce "picom --daemon --vsync"
     -- wallpaper
-    spawn     $ "nitrogen --set-tiled " ++ (getConfigValue "wallpaper") ++ " &"
+    spawn     $ "nitrogen --set-tiled /home/martins/Downloads/wave-Dark-arch.jpg &"
     -- NetworkManager applet for auto-connect using pw from vault and NM UI
     spawnOnce "nm-applet --indicator &"
     -- systray
     spawnOnce "trayer --monitor 0 --widthtype pixel --width 80 --align center --edge top --height 40 --tint 0x00000000 --transparent true --alpha 1 &"
     -- could edit i3lock (or use slock) compile manually making it 'dunstctl set-paused toggle &'
     -- TODO: use slock?
-    spawnOnce $ "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i " ++ (getConfigValue "screen-lock-wallpaper") ++ " &"
+    spawnOnce $ "xss-lock --transfer-sleep-lock -- i3lock --nofork -f -t -i /home/martins/Downloads/wave-Light-arch.png &"
     spawn     "xset s 600"
     spawnOnce "autorandr --change"
     -- TODO: this did not work
@@ -147,7 +161,7 @@ myKeys = [
      , ((mod4Mask, xK_F12), spawn "xset s activate")
     ] ++
 
-    extraKeys ++
+    -- extraKeys ++
 
     -- TODO: document what is this doing in details
     [((m .|. mod4Mask, k), windows $ f i)
@@ -155,15 +169,24 @@ myKeys = [
          , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
     ]
 
+-- FIXME: old, deprecated solution
+myClickableWorkspaces :: [String]
+myClickableWorkspaces = clickable . (map xmobarEscape)
+           -- $ [" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 "]
+           $ [" web ", " code ", " util ", " comm ", " pers ", " doc ", " run ", " cfg ", " term "]
+    where
+        clickable l = [ "<action=xdotool key super+" ++ show (n) ++ ">" ++ ws ++ "</action>" |
+                  (i,ws) <- zip [1..9] l,
+                  let n = i ]
+
 myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 
-layout = avoidStruts(tiled ||| Mirror tiled ||| noBorders Full)
+layout = avoidStruts(noBorders Full ||| tiled ||| Mirror tiled)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = smartSpacing 10 $ Tall nmaster delta ratio
      
      -- The default number of windows in the master pane
-     -- TODO: I think this needs to be something like 5 for me, give it a try
      nmaster = 1
      
      -- Default proportion of screen occupied by master pane
