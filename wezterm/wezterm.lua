@@ -8,12 +8,13 @@ local config = wezterm.config_builder()
 -- For example, changing the color scheme:
 config.color_scheme = "Catppuccin Mocha" -- or Macchiato, Frappe, Latte
 config.enable_scroll_bar = true
+-- Setting scrollback to huge number can prevent Wezterm from starting
 config.scrollback_lines = 9999
 config.font_size = 20
 -- no ligatures
 config.harfbuzz_features = { 'calt=0' }
 config.enable_scroll_bar = false
--- TODO: maybe hide sometimes
+-- TODO: maybe need keybinding to hide
 config.enable_tab_bar = true
 --hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = true
@@ -36,6 +37,7 @@ config.window_frame = {
 -- }
 
 -- local act = wezterm.action
+-- keybindings example
 -- config.key_tables = {
 --     copy_mode = {
 --       { key = 'Tab', mods = 'NONE', action = act.CopyMode 'MoveForwardWord' },
@@ -288,5 +290,70 @@ config.window_frame = {
 --   },
 -- }
 
--- and finally, return the configuration to wezterm
+-- TODO: this is from https://github.com/wezterm/wezterm/issues/3800; looks like could be useful
+-- local wezterm = require("wezterm")
+-- local color = require("style.color")
+-- local split = require("util.split")
+-- local icon = require("asset.icon")
+--
+-- local function set_title_icon(title)
+-- 	local title_with_icon = title
+--
+-- 	if string.find(title, "cmd") then
+-- 		title_with_icon = icon.evil .. " " .. title
+-- 	elseif string.find(title, "wsl") or string.find(title, "wslhost") then
+-- 		title_with_icon = icon.wsl_icon .. " wsl"
+-- 	elseif string.find(title, "nvim") then
+-- 		title_with_icon = icon.vim_icon .. " neovim"
+-- 	elseif string.find(title, "python") or title == string.find(title, "hiss") then
+-- 		title_with_icon = icon.python_icon .. " " .. title
+-- 	elseif string.find(title, "node") then
+-- 		title_with_icon = icon.node_icon .. " " .. title
+-- 	end
+--
+-- 	return title_with_icon
+-- end
+--
+-- local function tab_title(tab_info)
+-- 	local title = tab_info.tab_title
+--
+-- 	if title and #title > 0 then
+-- 		return title
+-- 	end
+--
+-- 	return tab_info.active_pane.title
+-- end
+--
+-- wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+-- 	local background = color.primary.primary_900
+-- 	local foreground = color.background.background_900
+-- 	local title = tab_title(tab)
+-- 	title = wezterm.truncate_right(title, max_width - 2)
+-- 	local title_icon = set_title_icon(title)
+--
+-- 	if tab.is_active then
+-- 		background = color.primary.primary_600
+-- 		foreground = color.background.background_900
+-- 	elseif hover then
+-- 		background = color.primary.primary_700
+-- 		foreground = color.background.background_900
+-- 	end
+--
+-- 	return {
+-- 		{ Attribute = { Intensity = "Bold" } },
+-- 		{ Background = { Color = color.background.background_900 } },
+-- 		{ Text = " " },
+-- 		{ Background = { Color = color.background.background_900 } },
+-- 		{ Foreground = { Color = background } },
+-- 		{ Text = icon.semi_circle_left },
+-- 		{ Background = { Color = background } },
+-- 		{ Foreground = { Color = foreground } },
+-- 		{ Text = title_icon },
+-- 		{ Background = { Color = color.background.background_900 } },
+-- 		{ Foreground = { Color = background } },
+-- 		{ Text = icon.semi_circle_right },
+-- 	}
+-- end)
+
+
 return config
