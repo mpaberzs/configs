@@ -3,7 +3,7 @@ local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>fw', builtin.live_grep, {})
 
 vim.keymap.set('n', '<leader>fs', function() 
-  builtin.grep_string({ search = vim.fn.input("search string: ") }); 
+  builtin.grep_string({ search = vim.fn.input("search string: ") });
 end, {})
 
 vim.keymap.set('n', '<leader>ff', function() 
@@ -17,8 +17,8 @@ vim.keymap.set('n', '<leader>ff', function()
   end
 end, {})
 
--- todo: does not work correctly (e.g. scripts dir)
-vim.keymap.set('n', '<leader>fdf', function() 
+-- TODO: does not work correctly (e.g. scripts dir)
+vim.keymap.set('n', '<leader>fdf', function()
   local result = vim.fn['FugitiveIsGitDir']()
   if result ~= '' then
     local cwd = vim.fn.input("files in dir: ")
@@ -30,7 +30,7 @@ vim.keymap.set('n', '<leader>fdf', function()
 end, {})
 
 vim.keymap.set('n', '<leader>fdw', function() 
-  builtin.live_grep({ cwd = vim.fn.input("grep in dir: ") }); 
+  builtin.live_grep({ cwd = vim.fn.input("grep in dir: ") });
 end, {})
 
 vim.keymap.set("n", "<leader>sf", function()
@@ -48,18 +48,24 @@ vim.keymap.set("n", "<leader>sdw", function()
   builtin.live_grep({ default_text = search, cwd = vim.fn.input("grep in dir: ") }); 
 end)
 
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+-- TODO
+-- vim.keymap.set("v", "<leader>sdw", function()
+--   local search = vim.fn.expand("'<,'>")
+--   builtin.live_grep({ default_text = search, cwd = vim.fn.input("grep in dir: ") }); 
+-- end)
+
+vim.keymap.set('n', '<leader>b', builtin.buffers, {})
+-- Looks not useful? Shows non related context
+-- vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', 'gd', builtin.lsp_definitions, {})
 vim.keymap.set('n', 'gD', builtin.lsp_type_definitions, {})
 vim.keymap.set('n', 'gr', builtin.lsp_implementations, {})
 vim.keymap.set('n', '<leader>q', builtin.diagnostics, {})
---vim.keymap.set('n', '<leader>gt', builtin.git_status, {})
 -- grep the word under the cursor
-vim.keymap.set("n", "<leader>sw", function()
-  local search = vim.fn.expand("<cword>")
-  builtin.live_grep({ default_text=search }); 
-end)
+-- vim.keymap.set("n", "<leader>sfw", function()
+--   local search = vim.fn.expand("<cword>")
+--   builtin.live_grep({ default_text=search });
+-- end)
 
 vim.keymap.set("n", "<leader>sdw", function()
   local search = vim.fn.expand("<cword>")

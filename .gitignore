@@ -1,1 +1,3 @@
 xmonad/MyXmonadConfig.hs
+nvim/coding_config/env.json
+nvim/coding_config/env.lua

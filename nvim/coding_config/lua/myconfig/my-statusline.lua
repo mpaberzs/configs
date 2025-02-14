@@ -1,7 +1,6 @@
 -- https://zignar.net/2022/01/21/a-boring-statusline-for-neovim/ -- a fork with some changes -- he has never statusline now - maybe take a look
 --
 -- TODO: hide on fugitive window
--- TODO: work on truncating for tiled windows/small screens
 
 local M = {}
 
@@ -119,12 +118,7 @@ M.get_line_col = function(self)
 end
 
 M.get_current_dir = function(self) 
-  if self:is_truncated(120) then
-    -- TODO
-    return ''
-  else
-    return string.format(' %s', vim.fn['getcwd']())
-  end
+  return string.format(' %s', vim.fn['substitute'](vim.fn['getcwd'](), '^.*/', '', ''))
 end
 
 --[[
@@ -180,8 +174,9 @@ M.set_active = function(self)
 
   return table.concat({
     colors.active, mode, mode_alt, git, git_alt, current_dir,
-    "%=", filename, "%=",
-    lsp_diagnostic_alt, lsp_diagnostic, filetype_alt, filetype, line_col_alt, line_col
+    "%=",
+    -- TODO: improve diagnostics, current state is useless
+    line_col_alt, line_col
   })
 end
 

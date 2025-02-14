@@ -1,10 +1,11 @@
 local op = require('op')
+
 op.setup({
   -- you can change this to a full path if `op`
   -- is not on your $PATH
   op_cli_path = 'op',
   -- Whether to sign in on start.
-  signin_on_start = true,
+  signin_on_start = false,
   -- show NerdFont icons in `vim.ui.select()` interfaces,
   -- set to false if you do not use a NerdFont or just
   -- don't want icons
@@ -72,7 +73,7 @@ op.setup({
   -- "Using Token-Based Sessions" section
   -- of README.md if you don't use biometric
   -- unlock for CLI.
-  biometric_unlock = true,
+  biometric_unlock = false,
   -- settings for Secure Notes editor
   secure_notes = {
     -- prefix for buffer names when

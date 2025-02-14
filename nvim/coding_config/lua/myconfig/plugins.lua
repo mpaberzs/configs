@@ -54,7 +54,7 @@ require("lazy").setup({
   {
     'numToStr/Comment.nvim',
     opts = {
-        -- add any options here
+      -- add any options here
     },
     lazy = false,
   },
@@ -68,39 +68,7 @@ require("lazy").setup({
   -- TODO
   -- {'marks'}
   {'nvim-tree/nvim-web-devicons'},
-  {
-    "robitx/gp.nvim",
-    config = function()
-      local op = require('op')
-      local openApiKey = op.get_secret('martins-openai-api-key', 'data')
-      local conf = {
-        -- For customization, refer to Install > Configuration in the Documentation/Readme
-        openai_api_key = openApiKey,
-        providers = {
-          openai = {
-            disable = false,
-            endpoint = "https://api.openai.com/v1/chat/completions",
-            secret = openApiKey,
-          },
-        },
-        agents = {
-          {
-            provider = 'openai',
-            name = "ChatGPT4o",
-            chat = true,
-            command = true,
-            -- string with model name or table with model name and parameters
-            model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
-            -- system prompt (use this to specify the persona/role of the AI)
-            system_prompt = require("gp.defaults").chat_system_prompt,
-          }
-        }
-      }
-      require("gp").setup(conf)
-
-      -- Setup shortcuts here (see Usage > Shortcuts in the Documentation/Readme)
-    end,
-  },
+  {"robitx/gp.nvim"},
   "tpope/vim-dispatch",
   "tpope/vim-dadbod-completion",
   {"mrjones2014/op.nvim", build = "make install"},
@@ -108,24 +76,60 @@ require("lazy").setup({
     'kristijanhusak/vim-dadbod-ui',
     dependencies = {
       { 'tpope/vim-dadbod', lazy = true },
-      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true }, -- Optional
+      { 'kristijanhusak/vim-dadbod-completion',
+      ft = { 'sql', 'mysql', 'plsql' },
+      lazy = true }, -- Optional
     },
     cmd = {
       'DBUI',
       'DBUIToggle',
       'DBUIAddConnection',
       'DBUIFindBuffer',
+      'DBUIExecuteQuery'
     },
     init = function()
       -- Your DBUI configuration
       vim.g.db_ui_use_nerd_fonts = 1
+      vim.g.db_ui_execute_on_save = 0
+      -- don't want dadbod-ui results to be auto-folded
+      vim.opt.foldmethod = 'manual'
+      vim.opt.foldenable = false
+      vim.opt.foldlevelstart = 999
+      --
     end,
+    keys = {
+       { '<C-g><C-g>', '<PLUG>(DBUI_ExecuteQuery)', desc = 'Execute query'}
+       -- TODO: add keymap for executing visual line
+    }
   },
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+    opts = {
+      -- configurations go here
+    },
+  },
+  -- {
+  --   'nvimdev/lspsaga.nvim',
+  --   config = function()
+  --     require('lspsaga').setup({})
+  --   end,
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter', -- optional
+  --     'nvim-tree/nvim-web-devicons',     -- optional
+  --   }
+  -- },
+  -- luarocks always has to be the last one
   {
     "vhyrro/luarocks.nvim",
     priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
     opts = {
-        rocks = { "lua-cjson" }, -- specifies a list of rocks to install
-    },
+      rocks = { "lua-cjson" }, -- specifies a list of rocks to install
+    }
   }
 }, {})

@@ -1,19 +1,19 @@
 -- cabal install --overwrite-policy=always --flags=with_xft --flags=with_iwlib --flags=with_alsa
 -- font awesome 6
 -- Roboto font
-Config { font = "xft:Roboto:pixelsize=14:antialias=true:hinting=true"
+Config { font = "Roboto 14"
        , additionalFonts = [ 
-                             "xft:Font Awesome 6 Free Solid:style=Solid:pixelsize=14"
-                           ]
+             "Font Awesome 6 Free Solid 14"
+         ]
        , bgColor = "black"
        , fgColor = "grey"
-       -- , position = TopP 0 80
-       , position = Static { xpos = 2560, ypos = 0, width = 1440, height = 24 }
+       , position = BottomP 0 0
+       -- , position = Static { xpos = 0, ypos = 0, width = 3440, height = 24 }
        , lowerOnStart = True
        , commands = [
          Run Cpu ["-t", "<fn=1></fn><hspace=5/><total>%"] 30
          , Run Memory ["-t", "<fn=1></fn><hspace=5/><used>M (<cache>M)"] 30
-         , Run DiskU [("nvme0n1p3", "<fn=1></fn><hspace=5/><free><hspace=5/>"), ("nvme0n1p4", "<fn=1> </fn><hspace=0/><free>")] [] 50
+         , Run DiskU [("/", "<fn=1></fn><hspace=5/><free><hspace=5/>"), ("/home", "<fn=1> </fn><hspace=0/><free>")] [] 50
        ]
        , sepChar = "%"
        , alignSep = "}{"
