@@ -86,6 +86,8 @@ end
 
 M.get_git_status = function(self)
   local head = vim.fn['fugitive#Head']()
+  -- too verbose
+  -- local head = vim.fn['fugitive#statusline']()
 
   if head == '' then
     return ''

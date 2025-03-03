@@ -103,6 +103,9 @@ require("lazy").setup({
     }
   },
   {
+    "lewis6991/gitsigns.nvim"
+  },
+  {
     "utilyre/barbecue.nvim",
     name = "barbecue",
     version = "*",
@@ -124,6 +127,10 @@ require("lazy").setup({
   --     'nvim-tree/nvim-web-devicons',     -- optional
   --   }
   -- },
+  {
+    "prichrd/netrw.nvim",
+    name = "netrw"
+  },
   -- luarocks always has to be the last one
   {
     "vhyrro/luarocks.nvim",

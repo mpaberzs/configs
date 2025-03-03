@@ -12,6 +12,7 @@ vim.opt.expandtab    = true
 -- vim.o.guifont = "Nerd Font:h18"
 -- sometimes smaller
 -- vim.o.guifont = "Nerd Font:h16"
+
 vim.opt.ignorecase    = false
 vim.opt.smartcase     = false
 
@@ -19,6 +20,7 @@ vim.opt.hlsearch      = true
 vim.opt.incsearch     = true
 
 vim.opt.termguicolors = true
+-- pre scroll lines up/down when moving in the file vertically
 vim.opt.scrolloff     = 8
 
 vim.opt.updatetime    = 50
@@ -32,7 +34,8 @@ vim.opt.smartindent    = true
 vim.opt.nu             = true
 vim.opt.relativenumber = true
 
-vim.opt.wrap     = false
+-- break line or go infinitely to the right, seems I mostly want that break but maybe should be togglable
+vim.opt.wrap     = true
 vim.opt.swapfile = false
 vim.opt.backup   = false
 vim.opt.undodir  = os.getenv("HOME") .. "/.vim/undodir"
