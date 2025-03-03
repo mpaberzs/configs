@@ -38,18 +38,62 @@ config.window_frame = {
 -- }
   -- TODO; try regex
 config.quick_select_patterns = {
+  '[a-zA-Z0-9+_/=]+' -- base64
 }
 
 local act = wezterm.action
 config.leader = { key = 'Space', mods = 'CTRL|SHIFT' }
 config.keys = {
+  -- FIXME: loop
+  -- tabs start
   {
-    key = 'Space',
-    mods = 'CTRL|SHIFT',
-    action = act.ActivateCopyMode
+    key = '1',
+    mods = 'ALT',
+    action = act.ActivateTab(0)
   },
   {
-    key = 'Space',
+    key = '2',
+    mods = 'ALT',
+    action = act.ActivateTab(1)
+  },
+  {
+    key = '3',
+    mods = 'ALT',
+    action = act.ActivateTab(2)
+  },
+  {
+    key = '4',
+    mods = 'ALT',
+    action = act.ActivateTab(3)
+  },
+  {
+    key = '5',
+    mods = 'ALT',
+    action = act.ActivateTab(4)
+  },
+  {
+    key = '6',
+    mods = 'ALT',
+    action = act.ActivateTab(5)
+  },
+  {
+    key = '7',
+    mods = 'ALT',
+    action = act.ActivateTab(6)
+  },
+  {
+    key = '8',
+    mods = 'ALT',
+    action = act.ActivateTab(7)
+  },
+  {
+    key = '9',
+    mods = 'ALT',
+    action = act.ActivateTab(8)
+  },
+  -- tabs end
+  {
+    key = 'c',
     mods = 'CTRL|SHIFT',
     action = act.ActivateCopyMode
   },
@@ -57,6 +101,26 @@ config.keys = {
     key = 'x',
     mods = 'CTRL|SHIFT',
     action = act.QuickSelect
+  },
+  -- TODO: make it open url
+  {
+    -- label = 'open url',
+    -- patterns = {
+    --   'https?://\\S+',
+    -- },
+    -- skip_action_on_paste = true,
+    -- action = wezterm.action_callback(function(window, pane)
+    --   local url = window:get_selection_text_for_pane(pane)
+    --   wezterm.log_info('opening: ' .. url)
+    --   wezterm.open_with(url)
+    -- end),
+    key = 'y',
+    mods = 'CTRL|SHIFT',
+    action = wezterm.action.QuickSelectArgs {
+      patterns = {
+        'https?://\\S+',
+      },
+    },
   },
   { key = 'h', mods='CTRL|SHIFT', action = act.ActivatePaneDirection 'Left' },
 
@@ -113,6 +177,14 @@ config.key_tables = {
 
     -- Cancel the mode by pressing <C-c>
     { key = 'c', mods = 'CTRL', action = 'PopKeyTable' },
+  },
+  quick_select = {
+    -- not possible currently: https://github.com/wezterm/wezterm/discussions/5118#discussioncomment-8694921
+    -- {
+    --   key = 'c',
+    --   mods = 'CTRL',
+    --   action = act.QuickSelectExit
+    -- },
   },
   -- copy_mode = {
   --   -- {
