@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # create symlinks
 CONFIGS_DIR="$HOME/.scripts/git/configs"
 # TODO: hide output from "file"

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 rm -rf ~/.cabal
 cabal update
 cabal install --ghc-options=-dynamic --ghc --lib assoc-list xmonad xmonad-utils xmonad-contrib xmonad-extras X11 --allow-newer --overwrite-policy=always
