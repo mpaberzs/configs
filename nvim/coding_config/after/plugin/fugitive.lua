@@ -13,3 +13,5 @@ vim.keymap.set("n", "<leader>gr", ":GMove " .. vim.fn.expand("%"))
   --   vim.cmd.GMove(new_path)
   -- end
 -- end)
+-- TODO
+-- vim.g.fugitive_azure_devops_baseurl=

@@ -27,7 +27,10 @@ require('mason-lspconfig').setup({
 				"ts_ls",
 				"eslint",
 				"rust_analyzer",
-        "lua_ls"
+        "lua_ls",
+        "marksman"
+        -- "htmx" -- doesn't work
+
 		},
 		handlers = {
 				function(server_name)

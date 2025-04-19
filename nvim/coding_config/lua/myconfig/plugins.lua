@@ -35,22 +35,23 @@ require("lazy").setup({
     },
   },
   {
-    "nvim-telescope/telescope.nvim", tag = "0.1.6",
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.6",
     dependencies = { "nvim-lua/plenary.nvim", "BurntSushi/ripgrep" }
   },
   "sharkdp/fd",
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",                 name = "catppuccin", priority = 1000 },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   "nvim-treesitter/playground",
   "mbbill/undotree",
   "tpope/vim-fugitive",
-  {'VonHeikemen/lsp-zero.nvim', branch = 'v3.x'},
-  {'neovim/nvim-lspconfig'},
-  {'hrsh7th/cmp-nvim-lsp'},
-  {'hrsh7th/nvim-cmp'},
-  {'L3MON4D3/LuaSnip'},
-  {'williamboman/mason.nvim'},
-  {'williamboman/mason-lspconfig.nvim'},
+  { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
+  { 'neovim/nvim-lspconfig' },
+  { 'hrsh7th/cmp-nvim-lsp' },
+  { 'hrsh7th/nvim-cmp' },
+  { 'L3MON4D3/LuaSnip' },
+  { 'williamboman/mason.nvim' },
+  { 'williamboman/mason-lspconfig.nvim' },
   {
     'numToStr/Comment.nvim',
     opts = {
@@ -67,18 +68,20 @@ require("lazy").setup({
   },
   -- TODO
   -- {'marks'}
-  {'nvim-tree/nvim-web-devicons'},
-  {"robitx/gp.nvim"},
+  { 'nvim-tree/nvim-web-devicons' },
+  { "robitx/gp.nvim" },
   "tpope/vim-dispatch",
   "tpope/vim-dadbod-completion",
-  {"mrjones2014/op.nvim", build = "make install"},
+  { "mrjones2014/op.nvim", build = "make install" },
   {
     'kristijanhusak/vim-dadbod-ui',
     dependencies = {
       { 'tpope/vim-dadbod', lazy = true },
-      { 'kristijanhusak/vim-dadbod-completion',
-      ft = { 'sql', 'mysql', 'plsql' },
-      lazy = true }, -- Optional
+      {
+        'kristijanhusak/vim-dadbod-completion',
+        ft = { 'sql', 'mysql', 'plsql' },
+        lazy = true
+      },             -- Optional
     },
     cmd = {
       'DBUI',
@@ -98,8 +101,8 @@ require("lazy").setup({
       --
     end,
     keys = {
-       { '<C-g><C-g>', '<PLUG>(DBUI_ExecuteQuery)', desc = 'Execute query'}
-       -- TODO: add keymap for executing visual line
+      { '<C-g><C-g>', '<PLUG>(DBUI_ExecuteQuery)', desc = 'Execute query' }
+      -- TODO: add keymap for executing visual line
     }
   },
   {
@@ -131,10 +134,33 @@ require("lazy").setup({
     "prichrd/netrw.nvim",
     name = "netrw"
   },
+  {
+    "rest-nvim/rest.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      opts = function(_, opts)
+        opts.ensure_installed = opts.ensure_installed or {}
+        table.insert(opts.ensure_installed, "http")
+      end,
+    },
+    keys = {
+      -- FIXME
+      -- { '<C-g><C-g>', '<PLUG>(Rest_run)', desc = 'Execute rest' }
+    }
+  },
+  {
+    'cedarbaum/fugitive-azure-devops.vim'
+  },
+  {
+    'tpope/vim-rhubarb'
+  },
+  {
+    'luisjure/csound-vim'
+  },
   -- luarocks always has to be the last one
   {
     "vhyrro/luarocks.nvim",
-    priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
+    priority = 1000,           -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
     opts = {
       rocks = { "lua-cjson" }, -- specifies a list of rocks to install
     }

@@ -1,6 +1,7 @@
 -- initiate config lazily so don't have to enter 1pass password on neovim startup
 local init_setup = function ()
   local op = require('op')
+  -- TODO: would it be possible to attempt to use system secrets manager (e.g. gnome-keyring) which would point to 1pass or maybe env file which would have op:// or other respective bindings?
   local openApiKey = op.get_secret('martins-openai-api-key', 'data')
   -- local openApiKey = ""
   local conf = {
@@ -30,6 +31,9 @@ local init_setup = function ()
 end
 
 local setupDone = false
+
+-- TODO: ability to use GP not even opening the window (maybe <leader>hi to insert following a prompt and <leader>hr to replace following an inserted prompt)
+-- TODO: read again about built in functions (the ones also at the bottom of this file)
 
 vim.keymap.set("n", "<leader>hc", function()
   if not setupDone then

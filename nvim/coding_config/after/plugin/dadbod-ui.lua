@@ -28,6 +28,11 @@ function get_environments()
   return envs_data
 end
 
+local function urlencode(str)
+  return (str:gsub("[^%w%.%-]", function(c)
+    return string.format("%%%02X", string.byte(c))
+  end))
+end
 
 function create_mysql_connection(env, env_conf)
   local secret_name = string.format(current_env_config['env_secret_string_format'], env)
@@ -37,10 +42,12 @@ function create_mysql_connection(env, env_conf)
       -- FIXME: dynamic triggering of proxies?
       local host = env_conf['mysql_host']
 
-      local user = op.get_secret(secret_name, current_env_config['secret_mysql_user_field'])
-      local password = op.get_secret(secret_name, current_env_config['secret_mysql_pass_field'])
-      local db_name = env_conf['mysql_db_name'] or (current_env_config['mysql_db_prefix'] .. env)
+      -- TODO: doesn't work
+      local vault = env_conf['vault'] or 'CI-Vault'
 
+      local user = urlencode(op.get_secret(secret_name, current_env_config['secret_mysql_user_field']))
+      local password = urlencode(op.get_secret(secret_name, current_env_config['secret_mysql_pass_field']))
+      local db_name = env_conf['mysql_db_name'] or (current_env_config['mysql_db_prefix'] .. env)
       return "mysql://" .. user .. ":" .. password .. "@" .. host .. "/" .. db_name .. "?ssl=false"
     end
   }
@@ -68,13 +75,13 @@ vim.keymap.set("n", "<leader>DD", function()
     db_list = {
       create_mysql_connection('martins', {
         mysql_host='host.docker.internal:3306',
-        mysql_db_name='martins',
+        mysql_db_name='eeedo',
       })
     }
     for env,env_conf in pairs(get_environments())
       do
         table.insert(db_list, create_mysql_connection(env, env_conf))
-        table.insert(db_list, create_mongodb_connection(env, env_conf))
+        -- table.insert(db_list, create_mongodb_connection(env, env_conf))
         -- TODO: redis
         -- table.insert(all_dbs, create_redis_connection(env_conf))
       end
