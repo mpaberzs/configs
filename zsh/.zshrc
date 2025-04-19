@@ -1,364 +1,19 @@
-# Filename:      /etc/skel/.zshrc
-# Purpose:       config file for zsh (z shell)
-# Authors:       (c) grml-team (grml.org)
-# Bug-Reports:   see http://grml.org/bugs/
-# License:       This file is licensed under the GPL v2 or any later version.
-################################################################################
-# Nowadays, grml's zsh setup lives in only *one* zshrc file.
-# That is the global one: /etc/zsh/zshrc (from grml-etc-core).
-# It is best to leave *this* file untouched and do personal changes to
-# your zsh setup via ${HOME}/.zshrc.local which is loaded at the end of
-# the global zshrc.
-#
-# That way, we enable people on other operating systems to use our
-# setup, too, just by copying our global zshrc to their ${HOME}/.zshrc.
-# Adjustments would still go to the .zshrc.local file.
-################################################################################
+source ~/.zsh/grml-zsh-config.zsh
 
-## Inform users about upgrade path for grml's old zshrc layout, assuming that:
-## /etc/skel/.zshrc was installed as ~/.zshrc,
-## /etc/zsh/zshrc was installed as ~/.zshrc.global and
-## ~/.zshrc.local does not exist yet.
-if [ -r ~/.zshrc -a -r ~/.zshrc.global -a ! -r ~/.zshrc.local ] ; then
-    printf '-!-\n'
-    printf '-!- Looks like you are using the old zshrc layout of grml.\n'
-    printf '-!- Please read the notes in the grml-zsh-refcard, being'
-    printf '-!- available at: http://grml.org/zsh/\n'
-    printf '-!-\n'
-    printf '-!- If you just want to get rid of this warning message execute:\n'
-    printf '-!-        touch ~/.zshrc.local\n'
-    printf '-!-\n'
-fi
-
-## Settings for umask
-#if (( EUID == 0 )); then
-#    umask 002
-#else
-#    umask 022
-#fi
-
-## Now, we'll give a few examples of what you might want to use in your
-## .zshrc.local file (just copy'n'paste and uncomment it there):
-
-## Prompt theme extension ##
-
-# Virtualenv support
-
-#function virtual_env_prompt () {
-#    REPLY=${VIRTUAL_ENV+(${VIRTUAL_ENV:t}) }
-#}
-#grml_theme_add_token  virtual-env -f virtual_env_prompt '%F{magenta}' '%f'
-#zstyle ':prompt:grml:left:setup' items rc virtual-env change-root user at host path vcs percent
-
-## ZLE tweaks ##
-
-## use the vi navigation keys (hjkl) besides cursor keys in menu completion
-#bindkey -M menuselect 'h' vi-backward-char        # left
-#bindkey -M menuselect 'k' vi-up-line-or-history   # up
-#bindkey -M menuselect 'l' vi-forward-char         # right
-#bindkey -M menuselect 'j' vi-down-line-or-history # bottom
-
-## set command prediction from history, see 'man 1 zshcontrib'
-#is4 && zrcautoload predict-on && \
-#zle -N predict-on         && \
-#zle -N predict-off        && \
-#bindkey "^X^Z" predict-on && \
-#bindkey "^Z" predict-off
-
-## press ctrl-q to quote line:
-#mquote () {
-#      zle beginning-of-line
-#      zle forward-word
-#      # RBUFFER="'$RBUFFER'"
-#      RBUFFER=${(q)RBUFFER}
-#      zle end-of-line
-#}
-#zle -N mquote && bindkey '^q' mquote
-
-## define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
-#WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' # the default
-#WORDCHARS=.
-#WORDCHARS='*?_[]~=&;!#$%^(){}'
-#WORDCHARS='${WORDCHARS:s@/@}'
-
-# just type '...' to get '../..'
-#rationalise-dot() {
-#local MATCH
-#if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
-#  LBUFFER+=/
-#  zle self-insert
-#  zle self-insert
-#else
-#  zle self-insert
-#fi
-#}
-#zle -N rationalise-dot
-#bindkey . rationalise-dot
-## without this, typing a . aborts incremental history search
-#bindkey -M isearch . self-insert
-
-#bindkey '\eq' push-line-or-edit
-
-## some popular options ##
-
-## add `|' to output redirections in the history
-#setopt histallowclobber
-
-## try to avoid the 'zsh: no matches found...'
-#setopt nonomatch
-
-## warning if file exists ('cat /dev/null > ~/.zshrc')
-#setopt NO_clobber
-
-## don't warn me about bg processes when exiting
-#setopt nocheckjobs
-
-## alert me if something failed
-#setopt printexitvalue
-
-## with spelling correction, assume dvorak kb
-#setopt dvorak
-
-## Allow comments even in interactive shells
-#setopt interactivecomments
-
-## if a new command line being added to the history list duplicates an older
-## one, the older command is removed from the list
-#is4 && setopt histignorealldups
-
-## compsys related snippets ##
-
-## changed completer settings
-#zstyle ':completion:*' completer _complete _correct _approximate
-#zstyle ':completion:*' expand prefix suffix
-
-## another different completer setting: expand shell aliases
-#zstyle ':completion:*' completer _expand_alias _complete _approximate
-
-## to have more convenient account completion, specify your logins:
-#my_accounts=(
-# {grml,grml1}@foo.invalid
-# grml-devel@bar.invalid
-#)
-#other_accounts=(
-# {fred,root}@foo.invalid
-# vera@bar.invalid
-#)
-#zstyle ':completion:*:my-accounts' users-hosts $my_accounts
-#zstyle ':completion:*:other-accounts' users-hosts $other_accounts
-
-## add grml.org to your list of hosts
-#hosts+=(grml.org)
-#zstyle ':completion:*:hosts' hosts $hosts
-
-## telnet on non-default ports? ...well:
-## specify specific port/service settings:
-#telnet_users_hosts_ports=(
-#  user1@host1:
-#  user2@host2:
-#  @mail-server:{smtp,pop3}
-#  @news-server:nntp
-#  @proxy-server:8000
-#)
-#zstyle ':completion:*:*:telnet:*' users-hosts-ports $telnet_users_hosts_ports
-
-## the default grml setup provides '..' as a completion. it does not provide
-## '.' though. If you want that too, use the following line:
-#zstyle ':completion:*' special-dirs true
-
-## aliases ##
-
-## translate
-#alias u='translate -i'
-
-## ignore ~/.ssh/known_hosts entries
-#alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" -o "PreferredAuthentications=keyboard-interactive"'
-
-
-## global aliases (for those who like them) ##
-
-#alias -g '...'='../..'
-#alias -g '....'='../../..'
-#alias -g BG='& exit'
-#alias -g C='|wc -l'
-#alias -g G='|grep'
-#alias -g H='|head'
-#alias -g Hl=' --help |& less -r'
-#alias -g K='|keep'
-#alias -g L='|less'
-#alias -g LL='|& less -r'
-#alias -g M='|most'
-#alias -g N='&>/dev/null'
-#alias -g R='| tr A-z N-za-m'
-#alias -g SL='| sort | less'
-#alias -g S='| sort'
-#alias -g T='|tail'
-#alias -g V='| vim -'
-
-## instead of global aliase it might be better to use grmls $abk assoc array, whose contents are expanded after pressing ,.
-#$abk[SnL]="| sort -n | less"
-
-## get top 10 shell commands:
-#alias top10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
-
-## Execute \kbd{./configure}
-#alias CO="./configure"
-
-## Execute \kbd{./configure --help}
-#alias CH="./configure --help"
-
-## miscellaneous code ##
-
-## Use a default width of 80 for manpages for more convenient reading
-#export MANWIDTH=${MANWIDTH:-80}
-
-## Set a search path for the cd builtin
-#cdpath=(.. ~)
-
-## variation of our manzsh() function; pick you poison:
-#manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
-
-## Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
-#bash() {
-#    NO_SWITCH="yes" command bash "$@"
-#}
-#restart () {
-#    exec $SHELL $SHELL_ARGS "$@"
-#}
-
-## Handy functions for use with the (e::) globbing qualifier (like nt)
-#contains() { grep -q "$*" $REPLY }
-#sameas() { diff -q "$*" $REPLY &>/dev/null }
-#ot () { [[ $REPLY -ot ${~1} ]] }
-
-## get_ic() - queries imap servers for capabilities; real simple. no imaps
-#ic_get() {
-#    emulate -L zsh
-#    local port
-#    if [[ ! -z $1 ]] ; then
-#        port=${2:-143}
-#        print "querying imap server on $1:${port}...\n";
-#        print "a1 capability\na2 logout\n" | nc $1 ${port}
-#    else
-#        print "usage:\n  $0 <imap-server> [port]"
-#    fi
-#}
-
-## List all occurrences of programm in current PATH
-#plap() {
-#    emulate -L zsh
-#    if [[ $# = 0 ]] ; then
-#        echo "Usage:    $0 program"
-#        echo "Example:  $0 zsh"
-#        echo "Lists all occurrences of program in the current PATH."
-#    else
-#        ls -l ${^path}/*$1*(*N)
-#    fi
-#}
-
-## Find out which libs define a symbol
-#lcheck() {
-#    if [[ -n "$1" ]] ; then
-#        nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
-#    else
-#        echo "Usage: lcheck <function>" >&2
-#    fi
-#}
-
-## Download a file and display it locally
-#uopen() {
-#    emulate -L zsh
-#    if ! [[ -n "$1" ]] ; then
-#        print "Usage: uopen \$URL/\$file">&2
-#        return 1
-#    else
-#        FILE=$1
-#        MIME=$(curl --head $FILE | \
-#               grep Content-Type | \
-#               cut -d ' ' -f 2 | \
-#               cut -d\; -f 1)
-#        MIME=${MIME%$'\r'}
-#        curl $FILE | see ${MIME}:-
-#    fi
-#}
-
-## Memory overview
-#memusage() {
-#    ps aux | awk '{if (NR > 1) print $5;
-#                   if (NR > 2) print "+"}
-#                   END { print "p" }' | dc
-#}
-
-## print hex value of a number
-#hex() {
-#    emulate -L zsh
-#    if [[ -n "$1" ]]; then
-#        printf "%x\n" $1
-#    else
-#        print 'Usage: hex <number-to-convert>'
-#        return 1
-#    fi
-#}
-
-## log out? set timeout in seconds...
-## ...and do not log out in some specific terminals:
-#if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
-#    unset TMOUT
-#else
-#    TMOUT=1800
-#fi
-
-## associate types and extensions (be aware with perl scripts and anwanted behaviour!)
-#check_com zsh-mime-setup || { autoload zsh-mime-setup && zsh-mime-setup }
-#alias -s pl='perl -S'
-
-## ctrl-s will no longer freeze the terminal.
-#stty erase "^?"
-
-## you want to automatically use a bigger font on big terminals?
-#if [[ "$TERM" == "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
-#    large
-#fi
-
-## Some quick Perl-hacks aka /useful/ oneliner
-#bew() { perl -le 'print unpack "B*","'$1'"' }
-#web() { perl -le 'print pack "B*","'$1'"' }
-#hew() { perl -le 'print unpack "H*","'$1'"' }
-#weh() { perl -le 'print pack "H*","'$1'"' }
-#pversion()    { perl -M$1 -le "print $1->VERSION" } # i. e."pversion LWP -> 5.79"
-#getlinks ()   { perl -ne 'while ( m/"((www|ftp|http):\/\/.*?)"/gc ) { print $1, "\n"; }' $* }
-#gethrefs ()   { perl -ne 'while ( m/href="([^"]*)"/gc ) { print $1, "\n"; }' $* }
-#getanames ()  { perl -ne 'while ( m/a name="([^"]*)"/gc ) { print $1, "\n"; }' $* }
-#getforms ()   { perl -ne 'while ( m:(\</?(input|form|select|option).*?\>):gic ) { print $1, "\n"; }' $* }
-#getstrings () { perl -ne 'while ( m/"(.*?)"/gc ) { print $1, "\n"; }' $*}
-#getanchors () { perl -ne 'while ( m/«([^«»\n]+)»/gc ) { print $1, "\n"; }' $* }
-#showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
-#vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
-#vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
-
-## END OF FILE #################################################################
+#### My custom lines start
 export PATH="$HOME/.cabal/bin:$PATH"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '$HOME/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '$HOME/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '$HOME/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# TODO: think about this
 bindkey \^U backward-kill-line
 
 alias dps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}'"
 
 alias pactlsinks="pactl --format=json list sinks | jq 'map(.index, .description)'"
 
-# TODO: use $EDITOR; maybe other adjustments
-# alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
-alias zshrc="nvim $HOME/.zshrc && source $HOME/.zshrc"
+alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 
 alias dc="docker-compose"
 function dockerbp() {
@@ -367,11 +22,28 @@ function dockerbp() {
   docker build -f Dockerfile-prod -t $1 . --no-cache
 }
 
-# use plain nvim
 # TODO: explore how I use $EDITOR, maybe need changes
 # alias vim="nvim -u $HOME/.config/nvim_simple/init.lua"
 alias vim="nvim"
-alias notes="neovide ~/Notes/ -- -u $HOME/.config/nvim/init.lua -c \"cd ~/Notes/\""
+alias e="nvim"
+
+export NOTES_DIR="$HOME/Notes"
+export TREEC_DIR="$HOME/.treec"
+
+alias vimn="nvim -i $HOME/.local/state/nvim/contexts/notes.shada -c \"MyNotesConfig\" -c \"cd $NOTES_DIR\""
+alias notes="vimn"
+alias en="vimn"
+
+alias vimnt="nvim -i $HOME/.local/state/nvim/contexts/notestreec.shada -c \"MyNotesConfig\" -c \"cd $TREEC_DIR\""
+alias treec="vimnt"
+alias ent="vimnt"
+
+alias vimp="nvim -i $HOME/.local/state/nvim/contexts/personal.shada"
+alias ep="vimp"
+
+# incognito
+alias vimi="nvim -i NONE"
+
 alias ls="/usr/bin/lsd"
 
 ### XMonad
@@ -381,6 +53,7 @@ alias xmobarrc="nvim -c \"cd $HOME/.config/xmobar/ | e ./xmobarrc1 | set syntax=
 
 # required since I want to use specific config file
 # TODO: I think some lines can be improved
+# FIXME: not relevant since using pacman xmonad/xmobar?
 function recompile_xmonad() {
   cd $HOME/.config/xmonad
   CONFIG_FILE=$(find $HOME/.config/xmonad/$1.hs -printf %f || echo 'xmonad.hs')
@@ -393,30 +66,51 @@ function recompile_xmonad() {
   $HOME/.scripts/$CONFIG_TYPE/xmonad-x86_64-linux --version
 }
 
-alias xmonadrcplasma="nvim -c \"cd $HOME/.config/xmonad | e xmonad-plasma.hs\" && recompile_xmonad xmonad-plasma"
-alias xmonadrc="nvim -c \"cd $HOME/.config/xmonad | e xmonad.hs\" && recompile_xmonad xmonad"
+# FIXME: not relevant since using pacman xmonad/xmobar?
+# alias xmonadrcplasma="nvim -c \"cd $HOME/.config/xmonad | e xmonad-plasma.hs\" && recompile_xmonad xmonad-plasma"
+alias xmonadrc="cd $HOME/.config/xmonad && nvim -c \"e xmonad.hs\" && xmonad --recompile"
 ###
 
-function trivyv() {
-  sudo trivy image $1 --scanners vuln --severity "HIGH,CRITICAL"
-}
+### TODO: Experimenting with wezterm rc edit cmds; remove when decided
+alias weztermrc="nvim $HOME/.config/wezterm/wezterm.lua"
+alias wezrc="weztermrc"
+alias wtrc="weztermrc"
+#
+
+alias trivyv="trivy image --format json --scanners vuln --severity \"HIGH,CRITICAL,MEDIUM\""
+alias trivytest="trivy image --format json --scanners vuln --severity \"HIGH,CRITICAL,MEDIUM\""
 
 # find cmd shortening
 alias f="find"
 # clear neovim swap
+# FIXME: still actual?
 alias nvimswap="rm ~/.local/state/nvim/swap/*"
 #
 # case insensitive
 export LESS=-Ri
-# case insensitive
-# alias grep="grep -i --color"
 alias grep="grep --color"
 
-alias df="df -h --type ext4 --type vfat"
+# human readable and only disk drives
+alias df="df -h --type ext4 --type vfat --type ntfs" 
 
 alias nvimrc="cd ~/.config/nvim && nvim"
 
-[ -f "$HOME/projects/scripts/work.inc.sh" ] && source "$HOME/projects/scripts/work.inc.sh" 
+### GIT
+# get git last commit msg
+alias gitlcm="git log -1 --pretty=%B | cat"
+
+alias gmaster="git checkout master && git pull"
+alias gmain="git checkout main && git pull"
+###
+
+function httpcode() {
+  cat ~/.zsh/httpcodes.json | jq ".[\"$1\"]"
+}
+
+# current work environment related configs
+[ -f "$HOME/projects/scripts/work.inc.zsh" ] && source "$HOME/projects/scripts/work.inc.zsh" 
+
+# TODO: using xmonad/xmobar from pacman now so I think not needed? 
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
 # The next line updates PATH for the Google Cloud SDK.
@@ -424,4 +118,12 @@ if [ -f '/home/martins/projects/scripts/gcloud/google-cloud-sdk/path.zsh.inc' ];
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/martins/projects/scripts/gcloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/martins/projects/scripts/gcloud/google-cloud-sdk/completion.zsh.inc'; fi
+
+# FIXME: use through ohmyzsh?
+source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+
+# FIXME: use through ohmyzsh?
+source ~/.scripts/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# source ~/.zsh_custom/git.plugin.zsh
 
