@@ -4,6 +4,9 @@ vim.keymap.set("n", "<leader>n", vim.cmd.Ex)
 vim.keymap.set("n", "<leader>va", function() vim.opt.virtualedit = "all" end)
 vim.keymap.set("n", "<leader>vn", function() vim.opt.virtualedit = "none" end)
 
+-- TODO: think of a binding that makes sense
+-- vim.keymap.set("n", "<leader>vn", "<cmd>cd %:h<CR>")
+
 -- copying to system clipboard and pasting from it
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("n", "<leader>c", 'viw"+y')
