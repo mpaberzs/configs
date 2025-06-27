@@ -172,20 +172,27 @@ myKeys = [
      -- FIXME: should be dmenu prompt with more options
      , ((mod4Mask,               xK_o),        spawn "xsel -bo | grep -E 'https?://' | xargs firefoxt --new-tab --url")
 
-     -- doesn't work but I also kind of don't use it... maybe should work differently
+     -- TODO: doesn't work but I also kind of don't use it... maybe should work differently
      , ((mod4Mask .|. shiftMask, xK_n),        spawn "wezterm -e node")
-     , ((mod4Mask .|. shiftMask, xK_v),        spawn "wezterm -e nvim")
+     -- TODO: kind of not using it.. think about it
+     -- , ((mod4Mask .|. shiftMask, xK_v),        spawn "wezterm -e nvim")
      , ((mod4Mask .|. shiftMask, xK_h),        spawn "dunstctl history-pop")
+     -- TODO: should maybe live on some other dir not xmobar related
+     , ((mod4Mask,               xK_v),        spawn "/home/martins/.config/xmobar/passmanaction.sh")
+     , ((mod4Mask .|. shiftMask, xK_v),        spawn "/home/martins/.config/xmobar/passmanactionlock.sh")
      -- trigger change to relevant profile if didn't switch automatically
      , ((mod4Mask,    xK_p),                   spawn "autorandr --change")
      -- switch to laptop screen only
      , ((mod4Mask .|. shiftMask, xK_p),        spawn "autorandr --load mobile")
+     -- TODO: video screen
+     -- TODO: do not work properly
      -- take & save screenshot to ~/Pictures/  
      , ((mod4Mask,    xK_Print),               spawn "flameshot gui --path /home/martins/Pictures/")
      , ((mod4Mask .|. shiftMask, xK_Print),    spawn "flameshot gui --clipboard --delay 3000")
      -- screen lock
      , ((mod4Mask,               xK_F12),      spawn "xset s activate")
-     , ((mod4Mask,               xK_l),        spawn "xset s activate")
+     -- deprecated in favour for 1pass/passman shortcut
+     -- , ((mod4Mask,               xK_l),        spawn "xset s activate")
      , ((mod1Mask,               xK_F4),       kill)
 
 
