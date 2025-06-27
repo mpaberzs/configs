@@ -16,7 +16,7 @@ config.font = wezterm.font("Roboto Mono")
 config.harfbuzz_features = { 'calt=0' }
 config.enable_scroll_bar = false
 -- TODO: maybe need keybinding to hide
-config.enable_tab_bar = true
+config.enable_tab_bar = false
 --hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = true
 config.tab_max_width = 25
