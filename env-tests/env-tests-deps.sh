@@ -1,4 +1,4 @@
-# !/usr/bin/bash
+#!/usr/bin/env bash
 echo '"env tests deps" tests'
 
 failed_main_tests=0

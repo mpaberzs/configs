@@ -1,4 +1,4 @@
-# !/usr/bin/bash
+#!/usr/bin/env bash
 echo 'user tests'
 
 # TODO: probably need more
