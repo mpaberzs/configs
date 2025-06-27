@@ -55,6 +55,7 @@ end)
 -- end)
 
 vim.keymap.set('n', '<leader>b', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 -- Looks not useful? Shows non related context
 -- vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', 'gd', builtin.lsp_definitions, {})

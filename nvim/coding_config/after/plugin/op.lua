@@ -100,4 +100,4 @@ op.setup({
   }
 })
 
-vim.keymap.set("n", "<leader>PL", function() op.op_signin() end, opts)
+-- vim.keymap.set("n", "<leader>PL", function() op.op_signin() end, opts)

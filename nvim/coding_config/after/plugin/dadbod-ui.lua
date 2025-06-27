@@ -81,7 +81,7 @@ vim.keymap.set("n", "<leader>DD", function()
     for env,env_conf in pairs(get_environments())
       do
         table.insert(db_list, create_mysql_connection(env, env_conf))
-        -- table.insert(db_list, create_mongodb_connection(env, env_conf))
+        table.insert(db_list, create_mongodb_connection(env, env_conf))
         -- TODO: redis
         -- table.insert(all_dbs, create_redis_connection(env_conf))
       end

@@ -1,16 +1,14 @@
--- file browser
-vim.keymap.set("n", "<leader>n", vim.cmd.Ex)
 -- virtualedits are useful for mass editing
 vim.keymap.set("n", "<leader>va", function() vim.opt.virtualedit = "all" end)
 vim.keymap.set("n", "<leader>vn", function() vim.opt.virtualedit = "none" end)
 
--- TODO: think of a binding that makes sense
--- vim.keymap.set("n", "<leader>vn", "<cmd>cd %:h<CR>")
-
 -- copying to system clipboard and pasting from it
 vim.keymap.set("v", "<leader>c", '"+y')
-vim.keymap.set("n", "<leader>c", 'viw"+y')
-vim.keymap.set("n", "<leader>p", '"+p')
+-- copy whole line without newline
+vim.keymap.set("n", "<leader>c", 'I<esc>v$h"+y')
+-- paste
+vim.keymap.set("n", "<leader>p", 'o<esc>"+p')
+vim.keymap.set("n", "<leader>P", 'O<esc>"+p')
 
 -- TODO: mapping for this - operations retaining " buffer
 -- vim.keymap.set("n", "<leader>p", '"_dP')
