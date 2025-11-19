@@ -1,0 +1,6 @@
+require('myconfig.set')
+require('myconfig.lazy')
+require('myconfig.keymap')
+require('myconfig.my-statusline')
+require('myconfig.live-templates')
+require('myconfig.configswitch')
